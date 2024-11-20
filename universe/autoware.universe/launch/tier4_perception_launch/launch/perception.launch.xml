@@ -77,8 +77,8 @@
   <arg name="objects_validation_method" default="obstacle_pointcloud"/>
 
   <!-- Traffic light recognition parameters -->
-  <arg name="use_traffic_light_recognition" default="true"/>
-  <arg name="traffic_light_recognition/enable_fine_detection" default="true"/>
+  <arg name="use_traffic_light_recognition" default="false"/> <!-- SHY_ -->
+  <arg name="traffic_light_recognition/enable_fine_detection" default="false"/> <!-- SHY_ -->
   <arg name="traffic_light_recognition/fusion_only" default="false"/>
   <arg name="traffic_light_image_number" default="1" description="choose traffic light image raw number(1-2)"/>
   <arg
@@ -102,10 +102,10 @@
   <!-- Whether to use detection by tracker -->
   <arg name="use_detection_by_tracker" default="true"/>
 
-  <!-- Radar long range integration methods -->
+  <!-- Radar long range integration methods --> <!--HJK_240508-->
   <arg
     name="use_radar_tracking_fusion"
-    default="true"
+    default="false" 
     description="if use_radar_tracking_fusion:=true, radar information is merged in tracking launch. Otherwise, radar information is merged in detection launch."
   />
 
