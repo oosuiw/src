@@ -1,0 +1,13 @@
+[DELETED]
+matlab
+twist_controller
+autoware/src.zip
+
+[TO-DO]
+JerkFiltered파라미터 튜닝 해야할지도(선속)
+lane_departure_checker 빌드
+mpc_lateral_controller 빌드
+pose_twist_estimator.launch.xml에서 3번째줄 stop_check_enabled의 value원래 false인데 true로 변경후 문제없는지 확인.
+occupancy_grid_map_outlier_filter 빌드
+motion_velocity_smoother 빌드
+planning_debug_tools 빌드
