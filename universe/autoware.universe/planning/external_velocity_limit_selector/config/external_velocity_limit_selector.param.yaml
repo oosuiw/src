@@ -15,4 +15,4 @@
       max_jerk: 1.5 # max jerk limit [m/sss]
 
     # motion state constraints
-    max_velocity: 20.0 # max velocity limit [m/s]
+    max_velocity: 0.5 #KMS_241121, 0.5 #0.625 #KMS_241119, 0.5 #KMS_241109 #20.0 # max velocity limit [m/s]

@@ -427,6 +427,7 @@ AckermannLateralCommand MpcLateralController::createCtrlCmdMsg(
   auto out = ctrl_cmd;
   out.stamp = clock_->now();
   m_steer_cmd_prev = out.steering_tire_angle;
+  //out.steering_tire_angle = 0.0; //SWS_240416
   return out;
 }
 

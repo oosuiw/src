@@ -856,7 +856,7 @@ void ObstacleStopPlannerNode::searchPredictedObject(
       break;
     }
 
-    // create one step circle center for vehicle
+    // create one step circle center for vehicle 
     const auto & p_front = decimate_trajectory.at(i).pose;
     const auto & p_back = decimate_trajectory.at(i + 1).pose;
     const auto z_axis_min = p_front.position.z;

@@ -29,6 +29,7 @@
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <tier4_debug_msgs/msg/float64_stamped.hpp>
+#include <std_msgs/msg/float64.hpp> //SWS_240420
 #include <visualization_msgs/msg/marker_array.hpp>
 
 #include <lanelet2_core/LaneletMap.h>
@@ -95,6 +96,9 @@ private:
   // Publisher
   tier4_autoware_utils::DebugPublisher debug_publisher_{this, "~/debug"};
   tier4_autoware_utils::ProcessingTimePublisher processing_time_publisher_{this};
+  //SWS_240420
+  rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr pub_cte;
+  rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr pub_he; 
 
   // Timer
   rclcpp::TimerBase::SharedPtr timer_;

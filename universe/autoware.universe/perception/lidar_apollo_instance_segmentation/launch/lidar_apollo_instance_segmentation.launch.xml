@@ -1,5 +1,5 @@
 <launch>
-  <arg name="input/pointcloud" default="/sensing/lidar/pointcloud"/>
+  <arg name="input/pointcloud" default="/sensing/lidar/concatenated/pointcloud"/> <!-- KMS_240610 --><!--/sensing/lidar/pointcloud-->
   <arg name="model" default="model_128"/>
   <arg name="output/objects" default="labeled_clusters"/>
 

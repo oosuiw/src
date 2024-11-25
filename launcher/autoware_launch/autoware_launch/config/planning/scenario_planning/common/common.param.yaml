@@ -1,14 +1,14 @@
 /**:
   ros__parameters:
     # constraints param for normal driving
-    normal:
-      min_acc: -1.0         # min deceleration [m/ss]
-      max_acc: 1.0          # max acceleration [m/ss]
+    normal: #KMS_240621
+      min_acc: -1.0 #-5.0        # min deceleration [m/ss]
+      max_acc: 1.0 #0.5 #1.5           # max acceleration [m/ss]
       min_jerk: -1.0        # min jerk [m/sss]
       max_jerk: 1.0         # max jerk [m/sss]
 
     slow_down:
-      min_acc: -1.0         # min deceleration [m/ss]
+      min_acc: -1.0 #-2.0         # min deceleration [m/ss]
       min_jerk: -1.0        # min jerk [m/sss]
 
     # constraints to be observed

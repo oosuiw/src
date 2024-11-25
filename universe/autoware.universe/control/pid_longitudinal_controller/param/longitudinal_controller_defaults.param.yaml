@@ -69,7 +69,7 @@
     max_jerk: 2.0
     min_jerk: -5.0
 
-    # pitch
+    # pitch #KMS_A
     use_trajectory_for_pitch_calculation: false
     lpf_pitch_gain: 0.95
     max_pitch_rad: 0.1
