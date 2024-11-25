@@ -1,6 +1,6 @@
 /**:
   ros__parameters:
-    max_cluster_size: 1000
-    min_cluster_size: 10
-    tolerance: 0.7
-    use_height: false
+    max_cluster_size: 1000 #최대 포인트 수
+    min_cluster_size: 10   #최소 포인트 수
+    tolerance: 0.7         #L2 유클리드 공간에서의 측정값으로서의 공간 클러스터 허용오차
+    use_height: false      #클러스터링에 point.z 사용

@@ -5,7 +5,8 @@ find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
 set(msg_files
-  "msg/KinematicState.msg")
+  "msg/KinematicState.msg"
+  "msg/LocalizationAccuracy.msg")
 
 set(msg_dependencies
   std_msgs

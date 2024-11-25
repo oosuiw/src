@@ -77,7 +77,7 @@ MotionVelocitySmootherNode::MotionVelocitySmootherNode(const rclcpp::NodeOptions
     std::bind(&MotionVelocitySmootherNode::onParameter, this, _1));
 
   // debug
-  publish_debug_trajs_ = declare_parameter<bool>("publish_debug_trajs");
+  publish_debug_trajs_ = true; //declare_parameter<bool>("publish_debug_trajs"); //KMS_240410
   debug_closest_velocity_ = create_publisher<Float32Stamped>("~/closest_velocity", 1);
   debug_closest_acc_ = create_publisher<Float32Stamped>("~/closest_acceleration", 1);
   debug_closest_jerk_ = create_publisher<Float32Stamped>("~/closest_jerk", 1);
@@ -569,7 +569,7 @@ TrajectoryPoints MotionVelocitySmootherNode::calcTrajectoryVelocity(
     return prev_output_;
   }
 
-  return output;
+  return traj_extracted; //output;  //KMS_241012
 }
 
 bool MotionVelocitySmootherNode::smoothVelocity(

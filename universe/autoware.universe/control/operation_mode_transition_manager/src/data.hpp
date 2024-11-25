@@ -39,7 +39,7 @@ using ControlModeReport = autoware_auto_vehicle_msgs::msg::ControlModeReport;
 
 enum class OperationMode { STOP, AUTONOMOUS, LOCAL, REMOTE };
 
-struct Transition
+struct Transition //KMS_241105
 {
   Transition(const rclcpp::Time & time, bool control, std::optional<OperationMode> previous)
   : time(time), previous(previous)

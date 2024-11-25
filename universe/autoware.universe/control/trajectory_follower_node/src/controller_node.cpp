@@ -74,7 +74,7 @@ Controller::Controller(const rclcpp::NodeOptions & node_options) : Node("control
     "~/input/current_operation_mode", rclcpp::QoS{1},
     [this](const OperationModeState::SharedPtr msg) { current_operation_mode_ptr_ = msg; });
   control_cmd_pub_ = create_publisher<autoware_auto_control_msgs::msg::AckermannControlCommand>(
-    "~/output/control_cmd", rclcpp::QoS{1}.transient_local());
+    "~/output/control_cmd", rclcpp::QoS{1}.transient_local()); //KMS_241017 //KMS_241108
   pub_processing_time_lat_ms_ =
     create_publisher<Float64Stamped>("~/lateral/debug/processing_time_ms", 1);
   pub_processing_time_lon_ms_ =

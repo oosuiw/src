@@ -438,6 +438,8 @@ PathWithLaneId refinePathForGoal(
   const double search_radius_range, const double search_rad_range, const PathWithLaneId & input,
   const Pose & goal, const int64_t goal_lane_id)
 {
+  RCLCPP_INFO(rclcpp::get_logger("Test"),"HJK"); //HJK
+
   PathWithLaneId filtered_path = input;
   PathWithLaneId path_with_goal;
   filtered_path.points = motion_utils::removeOverlapPoints(filtered_path.points);
