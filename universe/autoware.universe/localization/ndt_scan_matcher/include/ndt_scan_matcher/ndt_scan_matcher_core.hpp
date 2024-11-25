@@ -194,6 +194,7 @@ private:
   float inversion_vector_threshold_;
   float oscillation_threshold_;
   bool use_cov_estimation_;
+  float max_search_radius_;
   std::vector<Eigen::Vector2d> initial_pose_offset_model_;
   std::array<double, 36> output_pose_covariance_;
 
