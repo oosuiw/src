@@ -1,4 +1,1 @@
-/autoware.launch.xml
-/e2e_simulator.launch.xml
-/logging_simulator.launch.xml
-/planning_simulator.launch.xml
+launcher/autoware_launch/autoware_launch/launch/autoware.launch.xml
