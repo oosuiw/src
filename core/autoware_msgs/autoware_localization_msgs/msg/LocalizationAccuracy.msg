@@ -1,0 +1,2 @@
+float32 lateral_accuracy
+float32 long_radius
