@@ -39,6 +39,8 @@
 #include <tier4_planning_msgs/msg/scenario.hpp>
 #include <tier4_planning_msgs/msg/stop_reason_array.hpp>
 #include <visualization_msgs/msg/marker.hpp>
+#include <std_msgs/msg/float64.hpp> //KMS_241128
+
 
 #include <map>
 #include <memory>
@@ -103,14 +105,17 @@ private:
   rclcpp::Publisher<RerouteAvailability>::SharedPtr reroute_availability_publisher_;
   rclcpp::TimerBase::SharedPtr timer_;
 
+  //KMS_241128
+  rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr lateral_shift_subscriber_;
+
   std::map<std::string, rclcpp::Publisher<Path>::SharedPtr> path_candidate_publishers_;
   std::map<std::string, rclcpp::Publisher<Path>::SharedPtr> path_reference_publishers_;
 
   std::shared_ptr<PlannerData> planner_data_;
 
   //KMS_241127
-  // double lateral_shift_;
-  // std::mutex mutex_shift_;
+  double lateral_shift_;
+  std::mutex mutex_shift_;
 
   std::shared_ptr<PlannerManager> planner_manager_;
 

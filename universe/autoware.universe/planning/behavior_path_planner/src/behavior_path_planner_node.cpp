@@ -31,6 +31,10 @@
 #include <mutex>  // Added for mutex
 #include <tf2/utils.h>  // For tf2::getYaw
 
+//KMS_241128
+#include <std_msgs/msg/float64.hpp> 
+
+
 namespace
 {
 rclcpp::SubscriptionOptions createSubscriptionOptions(rclcpp::Node * node_ptr)
@@ -132,6 +136,14 @@ BehaviorPathPlannerNode::BehaviorPathPlannerNode(const rclcpp::NodeOptions & nod
     "~/input/route", qos_transient_local, std::bind(&BehaviorPathPlannerNode::onRoute, this, _1),
     createSubscriptionOptions(this));
 
+  // Lateral shift subscriber (added to replace parameter)
+  lateral_shift_subscriber_ = create_subscription<std_msgs::msg::Float64>(
+    "~/input/lateral_shift", 1,
+    [this](const std_msgs::msg::Float64::SharedPtr msg) {
+      const std::lock_guard<std::mutex> lock(mutex_shift_);
+      lateral_shift_ = msg->data;
+    });
+
   {
     const std::string path_candidate_name_space = "/planning/path_candidate/";
     const std::string path_reference_name_space = "/planning/path_reference/";
@@ -156,9 +168,6 @@ BehaviorPathPlannerNode::BehaviorPathPlannerNode(const rclcpp::NodeOptions & nod
         manager->name(), create_publisher<Path>(path_reference_name_space + manager->name(), 1));
     }
   }
-
-  //KMS_241127
-  lateral_shift_ = declare_parameter<double>("lateral_shift", 0.0);
 
   m_set_param_res = this->add_on_set_parameters_callback(
     std::bind(&BehaviorPathPlannerNode::onSetParam, this, std::placeholders::_1));
@@ -966,10 +975,6 @@ SetParametersResult BehaviorPathPlannerNode::onSetParam(
     updateParam(
       parameters, DrivableAreaExpansionParameters::PRINT_RUNTIME_PARAM,
       planner_data_->drivable_area_expansion_parameters.print_runtime);
-
-    //KMS_241127
-    updateParam(
-      parameters, "lateral_shift", lateral_shift_);
 
     // Optional: Clamp lateral_shift_ to a reasonable range (e.g., ±3 meters)
     if (std::abs(lateral_shift_) > 3.0) {
