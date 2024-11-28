@@ -27,10 +27,6 @@
 #include <string>
 #include <vector>
 
-//KMS_241127
-#include <mutex>  // Added for mutex
-#include <tf2/utils.h>  // For tf2::getYaw
-
 namespace
 {
 rclcpp::SubscriptionOptions createSubscriptionOptions(rclcpp::Node * node_ptr)
@@ -55,9 +51,6 @@ BehaviorPathPlannerNode::BehaviorPathPlannerNode(const rclcpp::NodeOptions & nod
 {
   using std::placeholders::_1;
   using std::chrono_literals::operator""ms;
-
-  //KMS_241127
-  lateral_shift_ = 0.0;  
 
   // data_manager
   {
@@ -156,9 +149,6 @@ BehaviorPathPlannerNode::BehaviorPathPlannerNode(const rclcpp::NodeOptions & nod
         manager->name(), create_publisher<Path>(path_reference_name_space + manager->name(), 1));
     }
   }
-
-  //KMS_241127
-  lateral_shift_ = declare_parameter<double>("lateral_shift", 0.0);
 
   m_set_param_res = this->add_on_set_parameters_callback(
     std::bind(&BehaviorPathPlannerNode::onSetParam, this, std::placeholders::_1));
@@ -283,8 +273,8 @@ BehaviorPathPlannerParameters BehaviorPathPlannerNode::getCommonParam()
 
 // wait until mandatory data is ready
 bool BehaviorPathPlannerNode::isDataReady()
-{ 
-  const auto missing = [this](const char * name) { //KMS_241127
+{
+  const auto missing = [this](const auto & name) {
     RCLCPP_INFO_SKIPFIRST_THROTTLE(get_logger(), *get_clock(), 5000, "waiting for %s", name);
     return false;
   };
@@ -405,28 +395,6 @@ void BehaviorPathPlannerNode::run()
   const auto path = getPath(output, planner_data_, planner_manager_);
   // update planner data
   planner_data_->prev_output_path = path;
-
-  //KMS_241127
-  {
-    std::lock_guard<std::mutex> lock(mutex_shift_);
-    double current_shift = lateral_shift_;  // Copy the current shift value
-
-    if (std::abs(current_shift) > 1e-3) {  // Apply shift only if significant
-      for (auto & point : path->points) {
-        // Extract yaw from the orientation
-        double yaw = tf2::getYaw(point.point.pose.orientation);
-
-        // Compute the normal vector (perpendicular to the path's heading)
-        double normal_x = -std::sin(yaw);
-        double normal_y =  std::cos(yaw);
-
-        // Apply the lateral shift
-        point.point.pose.position.x += current_shift * normal_x;
-        point.point.pose.position.y += current_shift * normal_y;
-      }
-      RCLCPP_INFO(get_logger(), "Applied lateral shift: %f meters", current_shift);
-    }
-  }
 
   // compute turn signal
   computeTurnSignal(planner_data_, *path, output);
@@ -554,7 +522,7 @@ void BehaviorPathPlannerNode::publish_reroute_availability() const
 {
   // In the current behavior path planner, we might encounter unexpected behavior when rerouting
   // while modules other than lane following are active. If non-lane-following module except
-  // always-executable module is approved and running, rerouting will not be  possible.
+  // always-executable module is approved and running, rerouting will not be　possible.
   RerouteAvailability is_reroute_available;
   is_reroute_available.stamp = this->now();
   if (planner_manager_->hasNonAlwaysExecutableApprovedModules()) {
@@ -892,7 +860,6 @@ SetParametersResult BehaviorPathPlannerNode::onSetParam(
     planner_manager_->updateModuleParams(parameters);
   }
 
-  //KMS_241127
   result.successful = true;
   result.reason = "success";
 
@@ -966,17 +933,6 @@ SetParametersResult BehaviorPathPlannerNode::onSetParam(
     updateParam(
       parameters, DrivableAreaExpansionParameters::PRINT_RUNTIME_PARAM,
       planner_data_->drivable_area_expansion_parameters.print_runtime);
-
-    //KMS_241127
-    updateParam(
-      parameters, "lateral_shift", lateral_shift_);
-
-    // Optional: Clamp lateral_shift_ to a reasonable range (e.g., ±3 meters)
-    if (std::abs(lateral_shift_) > 3.0) {
-      RCLCPP_WARN(get_logger(), "lateral_shift_ exceeds ±3 meters. Clamping to the limit.");
-      lateral_shift_ = std::copysign(3.0, lateral_shift_);
-    }
-
   } catch (const rclcpp::exceptions::InvalidParameterTypeException & e) {
     result.successful = false;
     result.reason = e.what();

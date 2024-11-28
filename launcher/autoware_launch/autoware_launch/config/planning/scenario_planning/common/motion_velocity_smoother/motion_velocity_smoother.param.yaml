@@ -1,7 +1,7 @@
 /**:
   ros__parameters:
     # motion state constraints
-    max_velocity: 0.5 #KMS_241121, 0.5 #0.625 #KMS_241118, 0.5 #KMS_241012 #20.0      # max velocity limit [m/s]
+    max_velocity: 5.0 #KMS_241126, 0.5 #KMS_241121, 0.5 #0.625 #KMS_241118, 0.5 #KMS_241012 #20.0      # max velocity limit [m/s]
     stop_decel: 0.0         # deceleration at a stop point[m/ss]
 
     # external velocity limit parameter

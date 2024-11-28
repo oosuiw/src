@@ -11,6 +11,7 @@
     backward_length_buffer_for_end_of_pull_over: 5.0
     backward_length_buffer_for_end_of_pull_out: 5.0
     minimum_pull_over_length: 16.0
+    lateral_shift: 0.0 #KMS_241127
 
     refine_goal_search_radius_range: 7.5
 

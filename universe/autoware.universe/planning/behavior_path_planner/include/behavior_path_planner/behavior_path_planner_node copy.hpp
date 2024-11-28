@@ -108,10 +108,6 @@ private:
 
   std::shared_ptr<PlannerData> planner_data_;
 
-  //KMS_241127
-  // double lateral_shift_;
-  // std::mutex mutex_shift_;
-
   std::shared_ptr<PlannerManager> planner_manager_;
 
   std::unique_ptr<SteeringFactorInterface> steering_factor_interface_ptr_;
