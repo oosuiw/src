@@ -57,6 +57,11 @@ ScanGroundFilterComponent::ScanGroundFilterComponent(const rclcpp::NodeOptions &
     use_recheck_ground_cluster_ = declare_parameter("use_recheck_ground_cluster", true);
     radial_dividers_num_ = std::ceil(2.0 * M_PI / radial_divider_angle_rad_);
     vehicle_info_ = VehicleInfoUtil(*this).getVehicleInfo();
+    //SWS_241130
+    value_int_ = declare_parameter("value_int", 260); //270
+    value_int2_ = declare_parameter("value_int2", 20);
+    value_float_ = declare_parameter("value_float", 0.2);
+    value_float2_ = declare_parameter("value_float2", 0.3);
 
     grid_mode_switch_grid_id_ =
       grid_mode_switch_radius_ / grid_size_m_;  // changing the mode of grid division
@@ -124,7 +129,7 @@ void ScanGroundFilterComponent::convertPointcloudGridScan(
     current_point.point_state = PointLabel::INIT;
     current_point.orig_index = i;
     current_point.orig_point = &in_cloud->points[i];
-
+    
     // radial divisions
     out_radial_ordered_points[radial_div].emplace_back(current_point);
   }
@@ -136,6 +141,7 @@ void ScanGroundFilterComponent::convertPointcloudGridScan(
       [](const PointRef & a, const PointRef & b) { return a.radius < b.radius; });
   }
 }
+
 void ScanGroundFilterComponent::convertPointcloud(
   const pcl::PointCloud<pcl::PointXYZ>::Ptr in_cloud,
   std::vector<PointCloudRefVector> & out_radial_ordered_points)
@@ -233,13 +239,17 @@ void ScanGroundFilterComponent::checkContinuousGndGrid(
   tmp_delta_radius = p.radius - (gnd_grids_list.end() - 2)->radius;
   float local_slope = std::atan(tmp_delta_mean_z / tmp_delta_radius);
   if (
-    abs(p.orig_point->z - next_gnd_z) <= non_ground_height_threshold_ + gnd_z_local_thresh ||
-    abs(local_slope) <= local_slope_max_angle_rad_) {
+    abs(p.orig_point->z - next_gnd_z) <= non_ground_height_threshold_ + gnd_z_local_thresh || //0.2
+    abs(local_slope) <= local_slope_max_angle_rad_) { //10 -> 0.174
     p.point_state = PointLabel::GROUND;
-  } else if (p.orig_point->z - next_gnd_z > non_ground_height_threshold_ + gnd_z_local_thresh) {
+  } 
+  else if (
+    p.orig_point->z - next_gnd_z > non_ground_height_threshold_ + gnd_z_local_thresh) {
     p.point_state = PointLabel::NON_GROUND;
   }
+
 }
+
 void ScanGroundFilterComponent::checkDiscontinuousGndGrid(
   PointRef & p, const std::vector<GridCenter> & gnd_grids_list)
 {
@@ -247,7 +257,7 @@ void ScanGroundFilterComponent::checkDiscontinuousGndGrid(
   float tmp_delta_avg_z = p.orig_point->z - gnd_grids_list.back().avg_height;
   float tmp_delta_radius = p.radius - gnd_grids_list.back().radius;
   float local_slope = std::atan(tmp_delta_avg_z / tmp_delta_radius);
-
+  
   if (
     abs(local_slope) < local_slope_max_angle_rad_ ||
     abs(tmp_delta_avg_z) < non_ground_height_threshold_ ||
@@ -264,12 +274,23 @@ void ScanGroundFilterComponent::checkBreakGndGrid(
   float tmp_delta_avg_z = p.orig_point->z - gnd_grids_list.back().avg_height;
   float tmp_delta_radius = p.radius - gnd_grids_list.back().radius;
   float local_slope = std::atan(tmp_delta_avg_z / tmp_delta_radius);
+
   if (abs(local_slope) < global_slope_max_angle_rad_) {
     p.point_state = PointLabel::GROUND;
+    //RCLCPP_INFO(get_logger(), "GROUND");
   } else if (local_slope > global_slope_max_angle_rad_) {
     p.point_state = PointLabel::NON_GROUND;
+    //RCLCPP_INFO(get_logger(), "NO_GROUND");
+  //} else { //SWS_241131
+  } else if (local_slope < -value_float_ && p.orig_point->z < -value_float2_ && p.radial_div > value_int_ && p.radial_div < value_int_ + value_int2_) {
+    p.point_state = PointLabel::OUT_OF_RANGE;
+    RCLCPP_INFO(get_logger(), "OUT_OF_RANGE");
+    RCLCPP_INFO(get_logger(), "local_slope: %f, orig_point->z: %f, radial_div: %ld", 
+      local_slope, p.orig_point->z, p.radial_div);
+    p.orig_point->z = -p.orig_point->z;
   }
 }
+
 void ScanGroundFilterComponent::recheckGroundCluster(
   PointsCentroid & gnd_cluster, const float non_ground_threshold,
   pcl::PointIndices & non_ground_indices)
@@ -283,6 +304,7 @@ void ScanGroundFilterComponent::recheckGroundCluster(
     }
   }
 }
+
 void ScanGroundFilterComponent::classifyPointCloudGridScan(
   std::vector<PointCloudRefVector> & in_radial_ordered_clouds,
   pcl::PointIndices & out_no_ground_indices)
@@ -306,7 +328,7 @@ void ScanGroundFilterComponent::classifyPointCloudGridScan(
 
     bool initialized_first_gnd_grid = false;
     bool prev_list_init = false;
-
+    
     for (size_t j = 0; j < in_radial_ordered_clouds[i].size(); ++j) {
       p = &in_radial_ordered_clouds[i][j];
       float global_slope_p = std::atan(p->orig_point->z / p->radius);
@@ -367,12 +389,14 @@ void ScanGroundFilterComponent::classifyPointCloudGridScan(
         gnd_grids.push_back(curr_gnd_grid);
         ground_cluster.initialize();
       }
+
       // classify
       if (p->orig_point->z - gnd_grids.back().avg_height > detection_range_z_max_) {
         p->point_state = PointLabel::OUT_OF_RANGE;
         prev_p = p;
         continue;
       }
+
       float points_xy_distance = std::hypot(
         p->orig_point->x - prev_p->orig_point->x, p->orig_point->y - prev_p->orig_point->y);
       if (
@@ -396,16 +420,19 @@ void ScanGroundFilterComponent::classifyPointCloudGridScan(
       if (
         p->grid_id < next_gnd_grid_id_thresh &&
         p->radius - gnd_grids.back().radius < gnd_grid_continual_thresh_ * p->grid_size) {
+        //RCLCPP_INFO(get_logger(), "CONTINUE"); //SWS_241129
         checkContinuousGndGrid(*p, gnd_grids);
-
       } else if (p->radius - gnd_grids.back().radius < gnd_grid_continual_thresh_ * p->grid_size) {
+        //RCLCPP_INFO(get_logger(), "DISCONTINUE");
         checkDiscontinuousGndGrid(*p, gnd_grids);
       } else {
+        //RCLCPP_INFO(get_logger(), "BREAK");
         checkBreakGndGrid(*p, gnd_grids);
       }
-      if (p->point_state == PointLabel::NON_GROUND) {
+      //SWS_241131
+      if (p->point_state == PointLabel::OUT_OF_RANGE) { //NON_GROUND
         out_no_ground_indices.indices.push_back(p->orig_index);
-      } else if (p->point_state == PointLabel::GROUND) {
+      } else if (p->point_state == PointLabel::GROUND) { //GROUND
         ground_cluster.addPoint(p->radius, p->orig_point->z, p->orig_index);
       }
       prev_p = p;
@@ -528,7 +555,7 @@ void ScanGroundFilterComponent::classifyPointCloud(
   }
 }
 
-void ScanGroundFilterComponent::extractObjectPoints(
+void ScanGroundFilterComponent::extractObjectPoints(  // NON_GROUND
   const pcl::PointCloud<pcl::PointXYZ>::Ptr in_cloud_ptr, const pcl::PointIndices & in_indices,
   pcl::PointCloud<pcl::PointXYZ>::Ptr out_object_cloud_ptr)
 {
@@ -561,10 +588,9 @@ void ScanGroundFilterComponent::filter(
   }
 
   extractObjectPoints(current_sensor_cloud_ptr, no_ground_indices, no_ground_cloud_ptr);
-
+  
   auto no_ground_cloud_msg_ptr = std::make_shared<PointCloud2>();
   pcl::toROSMsg(*no_ground_cloud_ptr, *no_ground_cloud_msg_ptr);
-
   no_ground_cloud_msg_ptr->header = input->header;
   output = *no_ground_cloud_msg_ptr;
 
@@ -618,6 +644,19 @@ rcl_interfaces::msg::SetParametersResult ScanGroundFilterComponent::onParameter(
     RCLCPP_DEBUG_STREAM(
       get_logger(),
       "Setting use_recheck_ground_cluster to: " << std::boolalpha << use_recheck_ground_cluster_);
+  }
+  //SWS_241130
+  if (get_param(p, "value_int", value_int_)) {
+    RCLCPP_DEBUG(get_logger(), "Setting value_int to: %ld.", value_int_);
+  }
+  if (get_param(p, "value_int2", value_int2_)) {
+    RCLCPP_DEBUG(get_logger(), "Setting value_int2 to: %ld.", value_int2_);
+  }
+  if (get_param(p, "value_float", value_float_)) {
+    RCLCPP_DEBUG(get_logger(), "Setting value_float to: %f.", value_float_);
+  }
+  if (get_param(p, "value_float2", value_float2_)) {
+    RCLCPP_DEBUG(get_logger(), "Setting value_float2 to: %f.", value_float2_);
   }
   rcl_interfaces::msg::SetParametersResult result;
   result.successful = true;

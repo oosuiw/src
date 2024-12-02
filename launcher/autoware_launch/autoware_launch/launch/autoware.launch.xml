@@ -14,7 +14,7 @@
   <!-- Optional parameters -->
   <!-- Modules to be launched -->
   <arg name="launch_vehicle" default="true" description="launch vehicle"/>
-  <arg name="launch_system" default="true" description="launch system"/> <!--KMS_241007-->
+  <arg name="launch_system" default="false" description="launch system"/> <!--KMS_241007-->
   <arg name="launch_map" default="true" description="launch map"/>
   <arg name="launch_sensing" default="true" description="launch sensing"/>
   <arg name="launch_sensing_driver" default="true" description="launch sensing driver"/>
@@ -33,12 +33,12 @@
   <!-- Map -->
 
   <!--CU--> 
-  <!-- <arg name="lanelet2_map_file" default="sweeper_test3.osm" description="lanelet2 map file name"/> -->
-  <!-- <arg name="pointcloud_map_file" default="clean_robot_moved.pcd" description="pointcloud map file name"/> -->
+  <arg name="lanelet2_map_file" default="sweeper_test3.osm" description="lanelet2 map file name"/>
+  <arg name="pointcloud_map_file" default="clean_robot_moved.pcd" description="pointcloud map file name"/>
 
   <!--PARK-->
-  <arg name="lanelet2_map_file" default="park_v12.osm" description="lanelet2 map file name"/>
-  <arg name="pointcloud_map_file" default="park_pcd" description="pointcloud map file name"/>
+  <!-- <arg name="lanelet2_map_file" default="park_v12.osm" description="lanelet2 map file name"/> -->
+  <!-- <arg name="pointcloud_map_file" default="park_pcd" description="pointcloud map file name"/> -->
 
   <!-- System -->
   <arg name="system_run_mode" default="online" description="run mode in system"/>

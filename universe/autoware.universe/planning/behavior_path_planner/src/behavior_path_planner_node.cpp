@@ -430,8 +430,8 @@ void BehaviorPathPlannerNode::run()
         double normal_y =  std::cos(yaw);
 
         // Apply the lateral shift
-        point.point.pose.position.x += current_shift * normal_x;
-        point.point.pose.position.y += current_shift * normal_y;
+        point.point.pose.position.x -= current_shift * normal_x;
+        point.point.pose.position.y -= current_shift * normal_y;
       }
       RCLCPP_INFO(get_logger(), "Applied lateral shift: %f meters", current_shift);
     }
