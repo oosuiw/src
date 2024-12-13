@@ -6,7 +6,7 @@ ament_auto_find_build_dependencies()
 
 set(msg_files
   "msg/KinematicState.msg"
-  "msg/LocalizationAccuracy.msg")
+  "msg/LocalizationAccuracy.msg") #HJK_241126_A
 
 set(msg_dependencies
   std_msgs

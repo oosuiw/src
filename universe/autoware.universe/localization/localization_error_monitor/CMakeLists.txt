@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 project(localization_error_monitor)
 
 find_package(autoware_cmake REQUIRED)
-find_package(autoware_localization_msgs REQUIRED)
+find_package(autoware_localization_msgs REQUIRED) #HJK_241126_B
 autoware_package()
 
 ament_auto_add_library(localization_error_monitor_module SHARED
@@ -12,7 +12,7 @@ ament_auto_add_library(localization_error_monitor_module SHARED
 ament_target_dependencies(
   localization_error_monitor_module
   autoware_localization_msgs
-)
+) #HJK_241126_B
 
 ament_auto_add_executable(localization_error_monitor
   src/main.cpp

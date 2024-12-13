@@ -22,7 +22,7 @@
 #include <diagnostic_msgs/msg/diagnostic_array.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
-#include <autoware_localization_msgs/msg/localization_accuracy.hpp>
+#include <autoware_localization_msgs/msg/localization_accuracy.hpp> //HJK_241126_B
 
 #include <memory>
 
@@ -41,7 +41,7 @@ private:
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
   rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr ellipse_marker_pub_;
   rclcpp::Publisher<diagnostic_msgs::msg::DiagnosticArray>::SharedPtr diag_pub_;
-  rclcpp::Publisher<autoware_localization_msgs::msg::LocalizationAccuracy>::SharedPtr localization_accuracy_pub_; //HJK_240619
+  rclcpp::Publisher<autoware_localization_msgs::msg::LocalizationAccuracy>::SharedPtr localization_accuracy_pub_; //HJK_241126_B
 
   rclcpp::TimerBase::SharedPtr timer_;
 
