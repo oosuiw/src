@@ -90,7 +90,7 @@ launch:
 
   - arg:
       name: motion_path_planner_type
-      default: obstacle_avoidance_planner #HJK_241126_J
+      default: obstacle_avoidance_planner
       # option: obstacle_avoidance_planner
       #         path_sampler
       #         none

@@ -53,7 +53,7 @@ LocalizationErrorMonitor::LocalizationErrorMonitor() : Node("localization_error_
     this->create_publisher<visualization_msgs::msg::Marker>("debug/ellipse_marker", durable_qos);
 
   diag_pub_ = this->create_publisher<diagnostic_msgs::msg::DiagnosticArray>("/diagnostics", 10);
-  localization_accuracy_pub_ = this->create_publisher<autoware_localization_msgs::msg::LocalizationAccuracy>("/localization_accuracy", 1); //HJK_241126_B
+  localization_accuracy_pub_ = this->create_publisher<autoware_localization_msgs::msg::LocalizationAccuracy>("/localization_accuracy", 1);
 
   logger_configure_ = std::make_unique<tier4_autoware_utils::LoggerLevelConfigure>(this);
 }
@@ -123,12 +123,10 @@ void LocalizationErrorMonitor::onOdom(nav_msgs::msg::Odometry::ConstSharedPtr in
     ellipse_.size_lateral_direction, warn_ellipse_size_lateral_direction_,
     error_ellipse_size_lateral_direction_));
 
-  //HJK_241126_B {
   autoware_localization_msgs::msg::LocalizationAccuracy localization_accuracy_msg;
   localization_accuracy_msg.lateral_accuracy = ellipse_.size_lateral_direction;
   localization_accuracy_msg.long_radius = ellipse_.long_radius;
   localization_accuracy_pub_->publish(localization_accuracy_msg);
-  //HJK_241126_B }
 
   diagnostic_msgs::msg::DiagnosticStatus diag_merged_status;
   diag_merged_status = mergeDiagnosticStatus(diag_status_array);
