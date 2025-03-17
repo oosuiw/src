@@ -14,6 +14,8 @@ find_package(OpenCV REQUIRED)
 # PCL
 find_package(PCL REQUIRED COMPONENTS common)
 
+include_directories(/opt/ros/humble/include) #KMS_250317
+
 # ===================================================
 # Executable
 # line segment detector

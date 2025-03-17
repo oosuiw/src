@@ -12,6 +12,7 @@ endif()
 ### Find Eigen Dependencies
 find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(diagnostic_updater REQUIRED) #KMS_241107
 
 include_directories(
   SYSTEM
@@ -37,6 +38,9 @@ set(MULTI_OBJECT_TRACKER_SRC
 ament_auto_add_library(multi_object_tracker_node SHARED
   ${MULTI_OBJECT_TRACKER_SRC}
 )
+
+ament_target_dependencies(multi_object_tracker_node diagnostic_updater rclcpp) #KMS_241107
+
 
 target_link_libraries(multi_object_tracker_node
   Eigen3::Eigen
