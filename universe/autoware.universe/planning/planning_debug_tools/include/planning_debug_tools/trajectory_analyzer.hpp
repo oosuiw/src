@@ -26,6 +26,7 @@
 #include "autoware_auto_planning_msgs/msg/trajectory.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "tier4_debug_msgs/msg/float64_multi_array_stamped.hpp"
+#include "std_msgs/msg/float32_multi_array.hpp" //SWS_240402
 
 #include <iostream>
 #include <map>
@@ -40,12 +41,14 @@ using autoware_auto_planning_msgs::msg::PathWithLaneId;
 using autoware_auto_planning_msgs::msg::Trajectory;
 using nav_msgs::msg::Odometry;
 using planning_debug_tools::msg::TrajectoryDebugInfo;
+using std_msgs::msg::Float32MultiArray; //SWS_240402
 
 template <typename T>
 class TrajectoryAnalyzer
 {
   using SubscriberType = typename rclcpp::Subscription<T>::SharedPtr;
-  using PublisherType = rclcpp::Publisher<TrajectoryDebugInfo>::SharedPtr;
+  //using PublisherType = rclcpp::Publisher<TrajectoryDebugInfo>::SharedPtr;
+  using PublisherType = rclcpp::Publisher<Float32MultiArray>::SharedPtr; //SWS_240402
   using T_ConstSharedPtr = typename T::ConstSharedPtr;
 
 public:
@@ -53,7 +56,8 @@ public:
   : node_(node), name_(sub_name)
   {
     const auto pub_name = sub_name + "/debug_info";
-    pub_ = node->create_publisher<TrajectoryDebugInfo>(pub_name, 1);
+    //pub_ = node->create_publisher<TrajectoryDebugInfo>(pub_name, 1);
+    pub_ = node->create_publisher<Float32MultiArray>(pub_name, 1); //SWS_240402
     sub_ = node->create_subscription<T>(
       sub_name, 1, [this](const T_ConstSharedPtr msg) { run(msg->points); });
   }
@@ -100,7 +104,20 @@ public:
       return;
     }
 
-    pub_->publish(data);
+    //pub_->publish(data);
+    //SWS_240402
+    Float32MultiArray v{};
+    // for (auto & p : getVelocityArray(points))
+    // {
+    //   v.data.push_back(p);
+    // }
+
+    //SWS_240403
+    for (size_t i = 0; i < data.velocity.size(); i += 2)
+    {
+    v.data.push_back(data.velocity[i]);
+    }
+    pub_->publish(v);
   }
 };
 

@@ -89,6 +89,7 @@ PathWithLaneId DefaultFixedGoalPlanner::modifyPathForSmoothGoalConnection(
       refined_goal = goal;
     }
   }
+  RCLCPP_INFO(rclcpp::get_logger("Test"),"asd"); //HJK
   double goal_search_radius{planner_data->parameters.refine_goal_search_radius_range};
   // TODO(shen): define in the parameter
   constexpr double range_reduce_by{1.0};  // set a reasonable value, 10% - 20% of the

@@ -507,6 +507,12 @@ void PidLongitudinalController::updateControlState(const ControlData & control_d
   static constexpr double vel_epsilon = 1e-3;
 
   // Let vehicle start after the steering is converged for control accuracy
+  //SWS_241107
+  /*
+  RCLCPP_INFO(rclcpp::get_logger("debug"), "current_vel: %f", current_vel);
+  RCLCPP_INFO(rclcpp::get_logger("debug"), "m_enable_keep_stopped_until_steer_convergence: %d", m_enable_keep_stopped_until_steer_convergence);
+  RCLCPP_INFO(rclcpp::get_logger("debug"), "lateral_sync_data_.is_steer_converged: %d", lateral_sync_data_.is_steer_converged);
+  */
   const bool keep_stopped_condition = std::fabs(current_vel) < vel_epsilon &&
                                       m_enable_keep_stopped_until_steer_convergence &&
                                       !lateral_sync_data_.is_steer_converged;
@@ -618,14 +624,20 @@ void PidLongitudinalController::updateControlState(const ControlData & control_d
     }
     return;
   }
-
+  
   // in STOPPED state
   if (m_control_state == ControlState::STOPPED) {
     // -- debug print --
+    //SWS_241107
+    /*
+    RCLCPP_INFO(rclcpp::get_logger("debug"), "has_nonzero_target_vel: %d", has_nonzero_target_vel);
+    RCLCPP_INFO(rclcpp::get_logger("debug"), "departure_condition_from_stopped: %d", departure_condition_from_stopped);
+    RCLCPP_INFO(rclcpp::get_logger("debug"), "keep_stopped_condition: %d", keep_stopped_condition);
+    */
     if (has_nonzero_target_vel && !departure_condition_from_stopped) {
       info_throttle("target speed > 0, but departure condition is not met. Keep STOPPED.");
     }
-    if (has_nonzero_target_vel && keep_stopped_condition) {
+    if (has_nonzero_target_vel && keep_stopped_condition) { //KMS_241024
       info_throttle("target speed > 0, but keep stop condition is met. Keep STOPPED.");
     }
     // ---------------

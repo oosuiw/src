@@ -25,7 +25,7 @@ MrmEmergencyStopOperator::MrmEmergencyStopOperator(const rclcpp::NodeOptions & n
   params_.target_acceleration = declare_parameter<double>("target_acceleration", -2.5);
   params_.target_jerk = declare_parameter<double>("target_jerk", -1.5);
 
-  // Subscriber
+  // Subscriber 
   sub_control_cmd_ = create_subscription<AckermannControlCommand>(
     "~/input/control/control_cmd", 1,
     std::bind(&MrmEmergencyStopOperator::onControlCommand, this, std::placeholders::_1));

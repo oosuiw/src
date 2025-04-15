@@ -108,7 +108,7 @@ RadiusSearch2dFilter::RadiusSearch2dFilter(rclcpp::Node & node)
   search_radius_ = node.declare_parameter("radius_search_2d_filter.search_radius", 1.0f);
   min_points_and_distance_ratio_ =
     node.declare_parameter("radius_search_2d_filter.min_points_and_distance_ratio", 400.0f);
-  min_points_ = node.declare_parameter("radius_search_2d_filter.min_points", 4);
+  min_points_ = node.declare_parameter("radius_search_2d_filter.min_points", 5);
   max_points_ = node.declare_parameter("radius_search_2d_filter.max_points", 70);
   max_filter_points_nb_ =
     node.declare_parameter("radius_search_2d_filter.max_filter_points_nb", 15000);

@@ -23,6 +23,7 @@
   <arg name="launch_system_monitor" default="true" description="launch system monitor"/>
   <arg name="launch_dummy_diag_publisher" description="launch dummy diag publisher"/>
   <arg name="run_mode" default="online" description="options: online, logging_simulation, planning_simulation"/>
+  
   <arg name="sensor_model" description="sensor model name"/>
 
   <let name="sensor_launch_pkg" value="$(find-pkg-share $(var sensor_model)_launch)"/>
@@ -115,4 +116,5 @@
       <arg name="launch_rqt_runtime_monitor_err" value="$(var launch_rqt_runtime_monitor_err)"/>
     </include>
   </group>
+
 </launch>

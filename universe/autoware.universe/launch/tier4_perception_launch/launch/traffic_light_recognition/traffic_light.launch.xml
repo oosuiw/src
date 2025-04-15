@@ -5,7 +5,7 @@
   <arg name="fusion_only" default="false" description="launch only occlusion_predictor and multi_camera_fusion"/>
   <arg name="traffic_light_fine_detector_model_path" default="$(find-pkg-share traffic_light_fine_detector)/data" description="fine detector label path"/>
   <arg name="traffic_light_fine_detector_label_name" default="tlr_labels.txt" description="fine detector label filename"/>
-  <arg name="traffic_light_fine_detector_model_name" default="tlr_yolox_s_batch_6" description="fine detector onnx model filename"/>
+  <arg name="traffic_light_fine_detector_model_name" default="tlr_car_ped_yolox_s_batch_6" description="fine detector onnx model filename"/>
   <arg name="traffic_light_classifier_model_path" default="$(find-pkg-share traffic_light_classifier)/data" description="classifier label path"/>
   <arg name="traffic_light_classifier_label_name" default="lamp_labels.txt" description="classifier label filename"/>
   <arg name="traffic_light_classifier_model_name" default="traffic_light_classifier_mobilenetv2_batch_6.onnx" description="classifier onnx model filename"/>
@@ -17,7 +17,7 @@
   <arg name="use_crosswalk_traffic_light_estimator" default="true" description="output pedestrian's traffic light signals"/>
   <arg name="crosswalk_traffic_light_estimator_param_file" default="$(find-pkg-share crosswalk_traffic_light_estimator)/config/crosswalk_traffic_light_estimator.param.yaml"/>
   <arg name="image_number" default="1" description="choose image raw number(1-2)"/>
-  <arg name="namespace1" default="camera6"/>
+  <arg name="namespace1" default="traffic_light"/> <!-- KMS_250222, camera6 -->
   <arg name="namespace2" default="camera7"/>
   <let name="all_camera_namespaces" value="[$(var namespace1)]" if="$(eval &quot; '$(var image_number)' == '1' &quot;)"/>
   <let name="all_camera_namespaces" value="[$(var namespace1), $(var namespace2)]" if="$(eval &quot; '$(var image_number)' >= '2' &quot;)"/>

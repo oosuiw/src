@@ -6,4 +6,8 @@
   <!-- vehicle -->
   <xacro:property name="vehicle_model_property" value="$(arg vehicle_model)"/>
   <xacro:include filename="$(find ${vehicle_model_property}_description)/urdf/vehicle.xacro"/>
+
+  <!-- sensors 
+  <xacro:property name="sensor_model_property" value="$(arg sensor_model)"/>
+  <xacro:include filename="$(find ${sensor_model_property}_description)/urdf/sensors.xacro"/> --> <!-- HJK_230000 --> <!-- TFs required are published separately (in launcher) -->
 </robot>

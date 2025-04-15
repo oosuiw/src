@@ -22,7 +22,7 @@
 #include <diagnostic_msgs/msg/diagnostic_array.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
-#include <autoware_localization_msgs/msg/localization_accuracy.hpp>
+#include <autoware_localization_msgs/msg/localization_accuracy.hpp> //HJK_240619
 
 #include <memory>
 
@@ -47,6 +47,7 @@ private:
 
   std::unique_ptr<tier4_autoware_utils::LoggerLevelConfigure> logger_configure_;
 
+  autoware_localization_msgs::msg::LocalizationAccuracy localization_msg; //HJK_240619
   double scale_;
   double error_ellipse_size_;
   double warn_ellipse_size_;

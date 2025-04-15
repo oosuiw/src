@@ -1,0 +1,12 @@
+/**: #Clean_Robot #KMS_241009
+  ros__parameters:
+    wheel_radius: 0.942       # 바퀴의 반경
+    wheel_width: 0.009        # 휠 타이어의 측면 너비
+    wheel_base: 0.9          # 앞바퀴 <-> 뒷바퀴 사이 거리
+    wheel_tread: 0.76         # 왼쪽 바퀴 중심과 오른쪽 바퀴 중심 사이
+    front_overhang: 0.5       # 앞바퀴 중심과 차량 전면 사이
+    rear_overhang: 0.54        # 뒷바퀴 중심과 차량 후면 사이
+    left_overhang: 0.13      # 왼쪽 바퀴 중심과 차량 왼쪽 사이
+    right_overhang: 0.13     # 오른쪽 바퀴 중심과 차량 오른쪽 사이
+    vehicle_height: 0.6
+    max_steer_angle: 0.70     # [rad] 

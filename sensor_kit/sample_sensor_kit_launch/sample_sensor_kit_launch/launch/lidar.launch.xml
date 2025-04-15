@@ -1,7 +1,7 @@
 <launch>
   <arg name="launch_driver" default="true"/>
   <arg name="host_ip" default="192.168.1.200"/>
-  <arg name="use_concat_filter" default="true"/>
+  <arg name="use_concat_filter" default="false"/> <!--KMS_241108-->
   <arg name="vehicle_id" default="$(env VEHICLE_ID default)"/>
   <arg name="vehicle_mirror_param_file"/>
   <arg name="use_pointcloud_container" default="true" description="launch pointcloud container"/>
@@ -26,11 +26,11 @@
       </include>
     </group>
 
-    <!-- KMS_250118, Niro-->
+    <!--KMS_241004-->
     <!-- <group>
       <push-ros-namespace namespace="left"/>
       <include file="$(find-pkg-share common_sensor_launch)/launch/velodyne_VLP16.launch.xml">
-        <arg name="max_range" value="5.0"/> <!--JSJ250114  5-->
+        <arg name="max_range" value="5.0"/>
         <arg name="sensor_frame" value="velodyne_left"/>
         <arg name="sensor_ip" value="192.168.1.201"/>
         <arg name="host_ip" value="$(var host_ip)"/>
@@ -45,10 +45,11 @@
       </include>
     </group> -->
 
+    <!--KMS_241004-->
     <!-- <group>
       <push-ros-namespace namespace="right"/>
       <include file="$(find-pkg-share common_sensor_launch)/launch/velodyne_VLP16.launch.xml">
-        <arg name="max_range" value="5.0"/> <!--JSJ250114  5-->
+        <arg name="max_range" value="5.0"/>
         <arg name="sensor_frame" value="velodyne_right"/>
         <arg name="sensor_ip" value="192.168.1.202"/>
         <arg name="host_ip" value="$(var host_ip)"/>
