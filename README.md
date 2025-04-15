@@ -1,1 +1,1 @@
-v1.1 is basic setup for SOUL
+v1.1 is basic setup for Niro
