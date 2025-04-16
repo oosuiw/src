@@ -39,14 +39,11 @@ ament_auto_add_library(multi_object_tracker_node SHARED
   ${MULTI_OBJECT_TRACKER_SRC}
 )
 
+ament_target_dependencies(multi_object_tracker_node diagnostic_updater rclcpp) #KMS_241107
+
+
 target_link_libraries(multi_object_tracker_node
   Eigen3::Eigen
-)
-
-#KMS_241107
-ament_target_dependencies(multi_object_tracker_node
-  diagnostic_updater
-  rclcpp
 )
 
 rclcpp_components_register_node(multi_object_tracker_node

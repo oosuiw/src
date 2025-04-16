@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="data_path" default="$(env HOME)/autoware_data" description="packages data and artifacts directory path"/>
+  <arg name="mirror_fine_detector_label_path" default="$(var data_path)/traffic_mirror_fine_detector/tmr_labels.txt" description="fine detector label path"/>
+  <arg name="mirror_fine_detector_model_path" default="$(var data_path)/traffic_mirror_fine_detector/yolox_trafficmirror.onnx" description="fine detector onnx model path"/>
+  <arg name="mirror_fine_detector_precision" default="fp32"/>
+  <arg name="mirror_fine_detector_score_thresh" default="0.3"/>
+  <arg name="mirror_fine_detector_nms_thresh" default="0.65"/>
+  <arg name="input/image" default="/image_raw"/>
+  <arg name="input/rois" default="/traffic_mirror_map_based_detector/output/mirror_rois"/>
+  <arg name="expect/rois" default="~/expect/mirror_rois"/>
+  <arg name="output/rois" default="~/output/rois"/>
+
+  <arg name="build_only" default="true" description="shutdown node after TensorRT engine file is built"/>
+
+  <node pkg="traffic_mirror_fine_detector" exec="traffic_mirror_fine_detector_node" name="traffic_mirror_fine_detector">
+    <remap from="~/input/image" to="$(var input/image)"/>
+    <remap from="~/input/rois" to="$(var input/rois)"/>
+    <remap from="~/expect/rois" to="$(var expect/rois)"/>
+    <remap from="~/output/rois" to="$(var output/rois)"/>
+    <param name="fine_detector_label_path" value="$(var mirror_fine_detector_label_path)"/>
+    <param name="fine_detector_model_path" value="$(var mirror_fine_detector_model_path)"/>
+    <param name="fine_detector_precision" value="$(var mirror_fine_detector_precision)"/>
+    <param name="fine_detector_score_thresh" value="$(var mirror_fine_detector_score_thresh)"/>
+    <param name="fine_detector_nms_thresh" value="$(var mirror_fine_detector_nms_thresh)"/>
+    <param name="build_only" value="$(var build_only)"/>
+  </node>
+</launch>

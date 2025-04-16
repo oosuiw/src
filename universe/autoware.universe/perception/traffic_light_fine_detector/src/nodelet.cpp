@@ -87,6 +87,10 @@ TrafficLightFineDetectorNodelet::TrafficLightFineDetectorNodelet(
   nvinfer1::Dims input_dim = tensorrt_common::get_input_dims(model_path);
   assert(input_dim.d[0] > 0);
   batch_size_ = input_dim.d[0];
+
+  //KMS_Mirror
+  RCLCPP_ERROR(this->get_logger(), "Engine batch size: %d", batch_size_);
+
   const tensorrt_common::BatchConfig batch_config{batch_size_, batch_size_, batch_size_};
 
   trt_yolox_ = std::make_unique<tensorrt_yolox::TrtYoloX>(
@@ -140,6 +144,10 @@ void TrafficLightFineDetectorNodelet::callback(
   if (in_image_msg->width < 2 || in_image_msg->height < 2) {
     return;
   }
+
+  //KMS_Mirror
+  RCLCPP_ERROR(this->get_logger(), "Received image with resolution: %d x %d", 
+              in_image_msg->width, in_image_msg->height);
 
   using std::chrono::high_resolution_clock;
   using std::chrono::milliseconds;

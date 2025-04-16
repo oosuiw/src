@@ -48,6 +48,9 @@
   <exec_depend>traffic_light_occlusion_predictor</exec_depend>
   <exec_depend>traffic_light_visualization</exec_depend>
 
+  <exec_depend>traffic_mirror_fine_detector</exec_depend>
+  <exec_depend>traffic_mirror_map_based_detector</exec_depend>
+
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>autoware_lint_common</test_depend>
 

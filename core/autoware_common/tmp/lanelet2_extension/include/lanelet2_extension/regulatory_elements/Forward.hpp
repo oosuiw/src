@@ -26,6 +26,7 @@ namespace lanelet::autoware
 {
 
 class AutowareTrafficLight;
+class AutowareTrafficMirror;  //KMS_250313
 class Crosswalk;
 class DetectionArea;
 class NoParkingArea;
@@ -41,6 +42,7 @@ namespace lanelet
 using TrafficSignConstPtr = std::shared_ptr<const lanelet::TrafficSign>;
 using TrafficLightConstPtr = std::shared_ptr<const lanelet::TrafficLight>;
 using AutowareTrafficLightConstPtr = std::shared_ptr<const lanelet::autoware::AutowareTrafficLight>;
+using AutowareTrafficMirrorConstPtr = std::shared_ptr<const lanelet::autoware::AutowareTrafficMirror>;  //KMS_250313
 using DetectionAreaConstPtr = std::shared_ptr<const lanelet::autoware::DetectionArea>;
 using NoParkingAreaConstPtr = std::shared_ptr<const lanelet::autoware::NoParkingArea>;
 using NoStoppingAreaConstPtr = std::shared_ptr<const lanelet::autoware::NoStoppingArea>;

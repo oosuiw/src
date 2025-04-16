@@ -1,5 +1,5 @@
 <launch>
-  <arg name="image_raw0" default="/image_raw0"/>
+  <arg name="image_raw0" default="/image_raw"/>
   <arg name="gpu_id_image_raw0" default="0"/>
 
   <arg name="image_raw1" default=""/>

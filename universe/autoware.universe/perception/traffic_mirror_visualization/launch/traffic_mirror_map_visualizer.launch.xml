@@ -1,0 +1,11 @@
+<launch>
+  <arg name="input/tm_state" default="traffic_mirror_signals"/>
+  <arg name="input/vector_map" default="/map/vector_map"/>
+  <arg name="output/traffic_mirror" default="traffic_signals/markers"/>
+
+  <node pkg="traffic_mirror_visualization" exec="traffic_mirror_map_visualizer_node" name="traffic_mirror_map_visualizer">
+    <remap from="~/input/tm_state" to="$(var input/tm_state)"/>
+    <remap from="~/input/vector_map" to="$(var input/vector_map)"/>
+    <remap from="~/output/traffic_mirror" to="$(var output/traffic_mirror)"/>
+  </node>
+</launch>

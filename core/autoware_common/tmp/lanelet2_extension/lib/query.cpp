@@ -27,6 +27,8 @@
 #include "lanelet2_extension/utility/message_conversion.hpp"
 #include "lanelet2_extension/utility/utilities.hpp"
 
+#include "lanelet2_extension/regulatory_elements/autoware_traffic_mirror.hpp"
+
 #include <Eigen/Eigen>
 #include <autoware_utils/autoware_utils.hpp>
 
@@ -218,6 +220,34 @@ std::vector<lanelet::NoStoppingAreaConstPtr> query::noStoppingAreas(
     }
   }
   return no_reg_elems;
+}
+
+std::vector<lanelet::AutowareTrafficMirrorConstPtr> query::autowareTrafficMirrors(
+  const lanelet::ConstLanelets & lanelets)
+{
+  std::vector<lanelet::AutowareTrafficMirrorConstPtr> mirror_reg_elems;
+
+  for (const auto & ll : lanelets) {
+    std::vector<lanelet::AutowareTrafficMirrorConstPtr> ll_mirror_re =
+      ll.regulatoryElementsAs<lanelet::autoware::AutowareTrafficMirror>();
+
+    for (const auto & mirror_ptr : ll_mirror_re) {
+      lanelet::Id id = mirror_ptr->id();
+      bool unique_id = true;
+
+      for (const auto & mirror_reg_elem : mirror_reg_elems) {
+        if (id == mirror_reg_elem->id()) {
+          unique_id = false;
+          break;
+        }
+      }
+
+      if (unique_id) {
+        mirror_reg_elems.push_back(mirror_ptr);
+      }
+    }
+  }
+  return mirror_reg_elems;
 }
 
 std::vector<lanelet::NoParkingAreaConstPtr> query::noParkingAreas(

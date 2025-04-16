@@ -20,6 +20,7 @@
 // NOLINTBEGIN(readability-identifier-naming)
 
 #include "lanelet2_extension/regulatory_elements/autoware_traffic_light.hpp"
+// #include "lanelet2_extension/regulatory_elements/autoware_traffic_mirror.hpp" //KMS_250313, add TrafficMirror
 #include "lanelet2_extension/regulatory_elements/crosswalk.hpp"
 #include "lanelet2_extension/regulatory_elements/detection_area.hpp"
 #include "lanelet2_extension/regulatory_elements/no_parking_area.hpp"
@@ -84,13 +85,19 @@ lanelet::ConstLanelets shoulderLanelets(const lanelet::ConstLanelets & lls);
 std::vector<lanelet::TrafficLightConstPtr> trafficLights(const lanelet::ConstLanelets & lanelets);
 
 /**
- * [autowareTrafficLights extracts Autoware Traffic Light regulatory element
- * from lanelets]
- * @param lanelets [input lanelets]
- * @return         [autoware traffic light that are associated with input
- * lanelets]
+ * [autowareTrafficLights 함수는 주어진 Lanelet 리스트에서 Autoware 신호등(Autoware Traffic Light) 규제 요소를 추출함]
+ * @param lanelets [입력으로 주어지는 Lanelet 리스트]
+ * @return         [입력된 Lanelet들과 연관된 Autoware 신호등(Autoware Traffic Light) 목록을 반환]
  */
 std::vector<lanelet::AutowareTrafficLightConstPtr> autowareTrafficLights(
+  const lanelet::ConstLanelets & lanelets);
+
+/** Add TrafficMirror | KMS_250313
+ * [autowareTrafficLights 함수는 주어진 Lanelet 리스트에서 Autoware 도로반사경 (Autoware Traffic Mirror) 규제 요소를 추출함]
+ * @param lanelets [입력으로 주어지는 Lanelet 리스트]
+ * @return         [입력된 Lanelet들과 연관된 Autoware 신호등(Autoware Traffic Mirror) 목록을 반환]
+ */
+std::vector<lanelet::AutowareTrafficMirrorConstPtr> autowareTrafficMirrors(
   const lanelet::ConstLanelets & lanelets);
 
 /**
