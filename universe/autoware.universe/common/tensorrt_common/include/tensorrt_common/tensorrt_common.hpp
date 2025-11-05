@@ -109,11 +109,7 @@ struct InferDeleter  // NOLINT
   void operator()(T * obj) const
   {
     if (obj) {
-#if TENSORRT_VERSION_MAJOR >= 8
-      delete obj;
-#else
-      obj->destroy();
-#endif
+      delete obj;  // KMS_251105
     }
   }
 };

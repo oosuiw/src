@@ -38,6 +38,7 @@ public:
     const std::string & onnx_path, const std::string & engine_path, const std::string & precision);
 
   tensorrt_common::TrtUniquePtr<nvinfer1::IExecutionContext> context_{nullptr};
+  tensorrt_common::TrtUniquePtr<nvinfer1::ICudaEngine> engine_{nullptr};  // KMS_251105
 
 protected:
   virtual bool setProfile(
@@ -60,7 +61,8 @@ private:
 
   tensorrt_common::TrtUniquePtr<nvinfer1::IRuntime> runtime_{nullptr};
   tensorrt_common::TrtUniquePtr<nvinfer1::IHostMemory> plan_{nullptr};
-  tensorrt_common::TrtUniquePtr<nvinfer1::ICudaEngine> engine_{nullptr};
+
+private:
 };
 
 }  // namespace centerpoint
