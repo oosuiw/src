@@ -75,6 +75,8 @@ EKFLocalizer::EKFLocalizer(const std::string & node_name, const rclcpp::NodeOpti
   pub_biased_pose_ = create_publisher<geometry_msgs::msg::PoseStamped>("ekf_biased_pose", 1);
   pub_biased_pose_cov_ = create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(
     "ekf_biased_pose_with_covariance", 1);
+  pub_a_priori_pose_cov_ = create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(
+    "~/output/a_priori_pose_with_covariance", 1);
   pub_diag_ = this->create_publisher<diagnostic_msgs::msg::DiagnosticArray>("/diagnostics", 10);
   sub_initialpose_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
     "initialpose", 1, std::bind(&EKFLocalizer::callbackInitialPose, this, _1));
@@ -156,6 +158,17 @@ void EKFLocalizer::timerCallback()
   DEBUG_INFO(get_logger(), "------------------------- start prediction -------------------------");
   ekf_module_->predictWithDelay(ekf_dt_);
   DEBUG_INFO(get_logger(), "[EKF] predictKinematicsModel calc time = %f [ms]", stop_watch_.toc());
+
+  // Publish a priori pose with covariance for debugging
+  {
+    const double a_priori_z = z_filter_.get_x();
+    const double a_priori_roll = roll_filter_.get_x();
+    const double a_priori_pitch = pitch_filter_.get_x();
+    const auto a_priori_pose_cov = ekf_module_->getAPrioriPoseWithCovariance(
+      this->now(), a_priori_z, a_priori_roll, a_priori_pitch);
+    pub_a_priori_pose_cov_->publish(a_priori_pose_cov);
+  }
+
   DEBUG_INFO(get_logger(), "------------------------- end prediction -------------------------\n");
 
   /* pose measurement update */

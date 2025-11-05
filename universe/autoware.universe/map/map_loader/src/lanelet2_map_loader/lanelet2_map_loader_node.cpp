@@ -76,7 +76,7 @@ void Lanelet2MapLoaderNode::on_map_projector_info(
   }
 
   // overwrite centerline
-  lanelet::utils::overwriteLaneletsCenterline(map, center_line_resolution, false);
+  lanelet::utils::overwriteLaneletsCenterline(map, center_line_resolution, false); //JHH_251009
 
   // create map bin msg
   const auto map_bin_msg = create_map_bin_msg(map, lanelet2_filename, now());

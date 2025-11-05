@@ -9,6 +9,7 @@ find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED)
 find_package(PCL REQUIRED)
 find_package(pcl_conversions REQUIRED)
+find_package(grid_map_pcl REQUIRED)
 find_package(OpenMP)
 
 include_directories(

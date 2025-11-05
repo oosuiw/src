@@ -119,6 +119,11 @@ private:
     const geometry_msgs::msg::PoseWithCovarianceStamped & initial_pose_old_msg,
     const geometry_msgs::msg::PoseWithCovarianceStamped & initial_pose_new_msg);
 
+  // Parameter Reconfigure
+  rcl_interfaces::msg::SetParametersResult on_parameter_changed(
+    const std::vector<rclcpp::Parameter> & parameters);
+  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr param_callback_handle_;
+
   bool validate_num_iteration(const int iter_num, const int max_iter_num);
   bool validate_score(
     const double score, const double score_threshold, const std::string & score_name);

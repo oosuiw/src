@@ -176,7 +176,10 @@ void CenterPointTRT::inference()
 
   // pillar encoder network
   std::vector<void *> encoder_buffers{encoder_in_features_d_.get(), pillar_features_d_.get()};
-  encoder_trt_ptr_->context_->enqueueV2(encoder_buffers.data(), stream_, nullptr);
+  for (int i = 0; i < encoder_trt_ptr_->engine_->getNbIOTensors(); ++i) {  // KMS_251105
+    encoder_trt_ptr_->context_->setTensorAddress(encoder_trt_ptr_->engine_->getIOTensorName(i), encoder_buffers.data()[i]);  // KMS_251105
+  }
+  encoder_trt_ptr_->context_->enqueueV3(stream_);  // KMS_251105
 
   // scatter
   CHECK_CUDA_ERROR(scatterFeatures_launch(
@@ -189,7 +192,10 @@ void CenterPointTRT::inference()
                                       head_out_offset_d_.get(),  head_out_z_d_.get(),
                                       head_out_dim_d_.get(),     head_out_rot_d_.get(),
                                       head_out_vel_d_.get()};
-  head_trt_ptr_->context_->enqueueV2(head_buffers.data(), stream_, nullptr);
+  for (int i = 0; i < head_trt_ptr_->engine_->getNbIOTensors(); ++i) {  // KMS_251105
+    head_trt_ptr_->context_->setTensorAddress(head_trt_ptr_->engine_->getIOTensorName(i), head_buffers.data()[i]);  // KMS_251105
+  }
+  head_trt_ptr_->context_->enqueueV3(stream_);  // KMS_251105
 }
 
 void CenterPointTRT::postProcess(std::vector<Box3D> & det_boxes3d)

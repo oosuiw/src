@@ -185,6 +185,8 @@ LaneDepartureCheckerNode::LaneDepartureCheckerNode(const rclcpp::NodeOptions & o
     std::bind(&LaneDepartureCheckerNode::onPredictedTrajectory, this, _1));
 
   // Publisher
+  pub_cte = create_publisher<std_msgs::msg::Float64>("~/deviation/cross_track_error", 1); //SWS_240420
+  pub_he = create_publisher<std_msgs::msg::Float64>("~/deviation/heading_error", 1);
   // Nothing
 
   // Diagnostic Updater
@@ -360,16 +362,23 @@ void LaneDepartureCheckerNode::onTimer()
     const auto & deviation = output_.trajectory_deviation;
     debug_publisher_.publish<tier4_debug_msgs::msg::Float64Stamped>(
       "deviation/lateral", deviation.lateral);
-    debug_publisher_.publish<tier4_debug_msgs::msg::Float64Stamped>("deviation/yaw", deviation.yaw);
+    debug_publisher_.publish<tier4_debug_msgs::msg::Float64Stamped>(
+      "deviation/yaw", deviation.yaw);
     debug_publisher_.publish<tier4_debug_msgs::msg::Float64Stamped>(
       "deviation/yaw_deg", rad2deg(deviation.yaw));
+    //SWS_240420
+    std_msgs::msg::Float64 cte, he;
+    cte.data = deviation.lateral;
+    he.data = deviation.yaw;
+    pub_cte->publish(cte);
+    pub_he->publish(he);
   }
   processing_time_map["Node: publishTrajectoryDeviation"] = stop_watch.toc(true);
 
   debug_publisher_.publish<visualization_msgs::msg::MarkerArray>(
     std::string("marker_array"), createMarkerArray());
   processing_time_map["Node: publishDebugMarker"] = stop_watch.toc(true);
-
+  
   // Merge processing_time_map
   for (const auto & m : output_.processing_time_map) {
     processing_time_map["Core: " + m.first] = m.second;

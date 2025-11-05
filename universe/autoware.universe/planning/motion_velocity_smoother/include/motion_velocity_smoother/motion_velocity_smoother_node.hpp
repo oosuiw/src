@@ -165,7 +165,7 @@ private:
   std::shared_ptr<SmootherBase> smoother_;
 
   bool publish_debug_trajs_;  // publish planned trajectories
-
+  bool disable_smooth_vel_; //SWS_250202
   double over_stop_velocity_warn_thr_;  // threshold to publish over velocity warn
 
   mutable rclcpp::Clock::SharedPtr clock_;

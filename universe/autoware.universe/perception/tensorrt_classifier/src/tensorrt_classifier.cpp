@@ -360,7 +360,7 @@ bool TrtClassifier::feedforwardAndDecode(
   results.clear();
   probabilities.clear();
   std::vector<void *> buffers = {input_d_.get(), out_prob_d_.get()};
-  trt_common_->enqueueV2(buffers.data(), *stream_, nullptr);
+  trt_common_->enqueueV3(buffers.data(), *stream_);  // KMS_251105
 
   int batch_size = static_cast<int>(images.size());
 

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Adaptive NDT Controller Launch File -->
+
+  <arg name="config_file" default="$(find-pkg-share adaptive_ndt_controller)/config/adaptive_ndt_controller.param.yaml"/>
+
+  <node pkg="adaptive_ndt_controller" exec="adaptive_ndt_controller_exe" name="adaptive_ndt_controller" output="screen">
+    <param from="$(var config_file)"/>
+  </node>
+
+</launch>

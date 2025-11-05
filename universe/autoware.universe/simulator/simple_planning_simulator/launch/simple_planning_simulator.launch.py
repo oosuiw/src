@@ -66,11 +66,11 @@ def launch_setup(context, *args, **kwargs):
             ("input/trajectory", "/planning/scenario_planning/trajectory"),
             ("input/engage", "/vehicle/engage"),
             ("input/control_mode_request", "/control/control_mode_request"),
-            ("output/twist", "/vehicle/status/velocity_status"),
+            ("output/twist", "/vehicle/status/velocity_status"), #jsj status1추가
             ("output/odometry", "/localization/kinematic_state"),
             ("output/acceleration", "/localization/acceleration"),
             ("output/imu", "/sensing/imu/imu_data"),
-            ("output/steering", "/vehicle/status/steering_status"),
+            ("output/steering", "/vehicle/status/steering_status"), #jsj status1추가
             ("output/gear_report", "/vehicle/status/gear_status"),
             ("output/turn_indicators_report", "/vehicle/status/turn_indicators_status"),
             ("output/hazard_lights_report", "/vehicle/status/hazard_lights_status"),

@@ -77,7 +77,8 @@ MotionVelocitySmootherNode::MotionVelocitySmootherNode(const rclcpp::NodeOptions
     std::bind(&MotionVelocitySmootherNode::onParameter, this, _1));
 
   // debug
-  publish_debug_trajs_ = declare_parameter<bool>("publish_debug_trajs");
+  publish_debug_trajs_ = declare_parameter<bool>("publish_debug_trajs"); //SWS_240410
+  disable_smooth_vel_ = declare_parameter<bool>("disable_smooth_vel"); //SWS_250202
   debug_closest_velocity_ = create_publisher<Float32Stamped>("~/closest_velocity", 1);
   debug_closest_acc_ = create_publisher<Float32Stamped>("~/closest_acceleration", 1);
   debug_closest_jerk_ = create_publisher<Float32Stamped>("~/closest_jerk", 1);
@@ -569,6 +570,12 @@ TrajectoryPoints MotionVelocitySmootherNode::calcTrajectoryVelocity(
     return prev_output_;
   }
 
+  // If not output, ego does not stop at goal in simulation // For sim, output but for real, traj_extracted, in case of sweeper //SWS_250202
+  if (disable_smooth_vel_) {
+    RCLCPP_INFO_THROTTLE(
+        get_logger(), *clock_, 10000, "Smoothing velocity disabled.");
+    return traj_extracted;
+  }
   return output;
 }
 

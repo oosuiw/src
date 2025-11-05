@@ -4,6 +4,8 @@ project(autoware_point_types)
 find_package(autoware_cmake REQUIRED)
 autoware_package()
 
+find_package(PCL REQUIRED)  #KMS_251013 PCL 헤더 인식 문제 해결: PCL 패키지 검색 추가
+
 include_directories(
   include
   SYSTEM

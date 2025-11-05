@@ -198,7 +198,8 @@ NDTScanMatcher::NDTScanMatcher()
     this->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
 
   rclcpp::CallbackGroup::SharedPtr main_callback_group;
-  main_callback_group = this->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+  main_callback_group =
+    this->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
 
   auto initial_pose_sub_opt = rclcpp::SubscriptionOptions();
   initial_pose_sub_opt.callback_group = initial_pose_callback_group;
@@ -298,7 +299,54 @@ NDTScanMatcher::NDTScanMatcher()
   }
 
   logger_configure_ = std::make_unique<tier4_autoware_utils::LoggerLevelConfigure>(this);
+
+  // Register parameter callback
+  param_callback_handle_ = this->add_on_set_parameters_callback(
+    std::bind(&NDTScanMatcher::on_parameter_changed, this, std::placeholders::_1));
 }
+
+rcl_interfaces::msg::SetParametersResult NDTScanMatcher::on_parameter_changed(
+  const std::vector<rclcpp::Parameter> & parameters)
+{
+  rcl_interfaces::msg::SetParametersResult result;
+  result.successful = true;
+
+  // Get current NDT parameters
+  auto ndt_params = ndt_ptr_->getParams();
+  bool params_changed = false;
+
+  for (const auto & param : parameters) {
+    if (param.get_name() == "resolution") {
+      if (ndt_params.resolution != param.as_double()) {
+        ndt_params.resolution = param.as_double();
+        RCLCPP_INFO(get_logger(), "NDT parameter 'resolution' dynamically changed to: %f", ndt_params.resolution);
+        params_changed = true;
+      }
+    } else if (param.get_name() == "step_size") {
+      if (ndt_params.step_size != param.as_double()) {
+        ndt_params.step_size = param.as_double();
+        RCLCPP_INFO(get_logger(), "NDT parameter 'step_size' dynamically changed to: %f", ndt_params.step_size);
+        params_changed = true;
+      }
+    } else if (param.get_name() == "max_iterations") {
+      if (ndt_params.max_iterations != param.as_int()) {
+        ndt_params.max_iterations = param.as_int();
+        RCLCPP_INFO(get_logger(), "NDT parameter 'max_iterations' dynamically changed to: %d", ndt_params.max_iterations);
+        params_changed = true;
+      }
+    }
+  }
+
+  // Apply the updated parameters to the NDT object only if they have changed
+  if (params_changed) {
+    // This requires a mutex lock if NDT is used in another thread
+    std::lock_guard<std::mutex> lock(ndt_ptr_mtx_);
+    ndt_ptr_->setParams(ndt_params);
+  }
+
+  return result;
+}
+
 
 void NDTScanMatcher::publish_diagnostic()
 {
@@ -356,7 +404,8 @@ void NDTScanMatcher::publish_diagnostic()
   // Ignore local optimal solution
   if (
     state_ptr_->count("is_local_optimal_solution_oscillation") &&
-    std::stoi((*state_ptr_)["is_local_optimal_solution_oscillation"])) {
+    std::stoi((*state_ptr_)["is_local_optimal_solution_oscillation"]))
+   {
     diag_status_msg.level = diagnostic_msgs::msg::DiagnosticStatus::OK;
     diag_status_msg.message = "local optimal solution oscillation occurred";
   }
@@ -986,7 +1035,8 @@ geometry_msgs::msg::PoseWithCovarianceStamped NDTScanMatcher::align_pose(
   result_pose_with_cov_msg.pose.pose = best_particle_ptr->result_pose;
 
   output_pose_with_cov_to_log(get_logger(), "align_pose_output", result_pose_with_cov_msg);
-  RCLCPP_INFO_STREAM(get_logger(), "best_score," << best_particle_ptr->score);
+  RCLCPP_INFO_STREAM(get_logger(), "best_score,"
+ << best_particle_ptr->score);
 
   return result_pose_with_cov_msg;
 }

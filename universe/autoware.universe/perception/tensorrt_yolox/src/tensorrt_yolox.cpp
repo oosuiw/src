@@ -696,14 +696,7 @@ bool TrtYoloX::doMultiScaleInference(
 
 // This method is assumed to be called when specified YOLOX model contains
 // EfficientNMS_TRT module.
-bool TrtYoloX::feedforward(const std::vector<cv::Mat> & images, ObjectArrays & objects)
-{
-  std::vector<void *> buffers = {
-    input_d_.get(), out_num_detections_d_.get(), out_boxes_d_.get(), out_scores_d_.get(),
-    out_classes_d_.get()};
-
-  trt_common_->enqueueV2(buffers.data(), *stream_, nullptr);
-
+trt_common_->enqueueV3(buffers.data(), *stream_);  // KMS_251105
   const auto batch_size = images.size();
   auto out_num_detections = std::make_unique<int32_t[]>(batch_size);
   auto out_boxes = std::make_unique<float[]>(4 * batch_size * max_detections_);

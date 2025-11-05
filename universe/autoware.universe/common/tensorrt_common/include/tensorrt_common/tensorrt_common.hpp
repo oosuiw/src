@@ -185,7 +185,7 @@ public:
   nvinfer1::Dims getBindingDimensions(const int32_t index) const;
   int32_t getNbBindings();
   bool setBindingDimensions(const int32_t index, const nvinfer1::Dims & dimensions) const;
-  bool enqueueV2(void ** bindings, cudaStream_t stream, cudaEvent_t * input_consumed);
+  bool enqueueV3(void ** bindings, cudaStream_t stream);  // KMS_251105
 
   /**
    * @brief output per-layer information

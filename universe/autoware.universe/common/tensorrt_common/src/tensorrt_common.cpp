@@ -454,23 +454,18 @@ bool TrtCommon::buildEngineFromOnnx(
     batch_config_[0] = input_batch;
   }
 
-  if (batch_config_.at(0) > 1 && (batch_config_.at(0) == batch_config_.at(2))) {
-    // Attention : below API is deprecated in TRT8.4
-    builder->setMaxBatchSize(batch_config_.at(2));
-  } else {
-    if (build_config_->profile_per_layer) {
-      auto profile = builder->createOptimizationProfile();
-      profile->setDimensions(
-        network->getInput(0)->getName(), nvinfer1::OptProfileSelector::kMIN,
-        nvinfer1::Dims4{batch_config_.at(0), input_channel, input_height, input_width});
-      profile->setDimensions(
-        network->getInput(0)->getName(), nvinfer1::OptProfileSelector::kOPT,
-        nvinfer1::Dims4{batch_config_.at(1), input_channel, input_height, input_width});
-      profile->setDimensions(
-        network->getInput(0)->getName(), nvinfer1::OptProfileSelector::kMAX,
-        nvinfer1::Dims4{batch_config_.at(2), input_channel, input_height, input_width});
-      config->addOptimizationProfile(profile);
-    }
+  if (build_config_->profile_per_layer) {  // KMS_251105
+    auto profile = builder->createOptimizationProfile();
+    profile->setDimensions(
+      network->getInput(0)->getName(), nvinfer1::OptProfileSelector::kMIN,
+      nvinfer1::Dims4{batch_config_.at(0), input_channel, input_height, input_width});
+    profile->setDimensions(
+      network->getInput(0)->getName(), nvinfer1::OptProfileSelector::kOPT,
+      nvinfer1::Dims4{batch_config_.at(1), input_channel, input_height, input_width});
+    profile->setDimensions(
+      network->getInput(0)->getName(), nvinfer1::OptProfileSelector::kMAX,
+      nvinfer1::Dims4{batch_config_.at(2), input_channel, input_height, input_width});
+    config->addOptimizationProfile(profile);
   }
   if (precision_ == "int8" && calibrator_) {
     config->setFlag(nvinfer1::BuilderFlag::kINT8);
@@ -536,38 +531,29 @@ bool TrtCommon::isInitialized()
 
 nvinfer1::Dims TrtCommon::getBindingDimensions(const int32_t index) const
 {
-#if (NV_TENSORRT_MAJOR * 1000) + (NV_TENSORRT_MINOR * 100) + (NV_TENSOR_PATCH * 10) >= 8500
-  auto const & name = engine_->getIOTensorName(index);
-  auto dims = context_->getTensorShape(name);
-  bool const has_runtime_dim =
-    std::any_of(dims.d, dims.d + dims.nbDims, [](int32_t dim) { return dim == -1; });
-
-  if (has_runtime_dim) {
-    return dims;
-  } else {
-    return context_->getBindingDimensions(index);
-  }
-#else
-  return context_->getBindingDimensions(index);
-#endif
+  return engine_->getTensorShape(engine_->getIOTensorName(index));  // KMS_251105
 }
 
 int32_t TrtCommon::getNbBindings()
 {
-  return engine_->getNbBindings();
+  return engine_->getNbIOTensors();  // KMS_251105
 }
 
 bool TrtCommon::setBindingDimensions(const int32_t index, const nvinfer1::Dims & dimensions) const
 {
-  return context_->setBindingDimensions(index, dimensions);
+  return context_->setInputShape(engine_->getIOTensorName(index), dimensions);
 }
 
-bool TrtCommon::enqueueV2(void ** bindings, cudaStream_t stream, cudaEvent_t * input_consumed)
+bool TrtCommon::enqueueV3(void ** bindings, cudaStream_t stream)
 {
+  for (int i = 0; i < engine_->getNbIOTensors(); ++i) {  // KMS_251105
+    context_->setTensorAddress(engine_->getIOTensorName(i), bindings[i]);  // KMS_251105
+  }
+
   if (build_config_->profile_per_layer) {
     auto inference_start = std::chrono::high_resolution_clock::now();
 
-    bool ret = context_->enqueueV2(bindings, stream, input_consumed);
+    bool ret = context_->enqueueV3(stream);  // KMS_251105
 
     auto inference_end = std::chrono::high_resolution_clock::now();
     host_profiler_.reportLayerTime(
@@ -575,7 +561,7 @@ bool TrtCommon::enqueueV2(void ** bindings, cudaStream_t stream, cudaEvent_t * i
       std::chrono::duration<float, std::milli>(inference_end - inference_start).count());
     return ret;
   } else {
-    return context_->enqueueV2(bindings, stream, input_consumed);
+    return context_->enqueueV3(stream);  // KMS_251105
   }
 }
 

@@ -1,0 +1,38 @@
+/**:
+  ros__parameters:
+    # The node name of the NDT scan matcher to be controlled
+    ndt_node_name: "/localization/pose_estimator/ndt_scan_matcher"
+
+    # Topic from pose_uncertainty_monitor
+    uncertainty_topic: "/adaptive_ndt/uncertainty_vector"
+
+    # --- Uncertainty Thresholds ---
+    # The range of uncertainty to consider for scaling (0.0 ~ 1.0)
+    pos_uncertainty_min_threshold: 0.1  # Start scaling above this uncertainty (meters)
+    pos_uncertainty_max_threshold: 1.0  # Reach max scaling at this uncertainty (meters)
+    yaw_uncertainty_min_threshold: 0.05 # Start scaling above this uncertainty (radians)
+    yaw_uncertainty_max_threshold: 0.5  # Reach max scaling at this uncertainty (radians)
+
+    # --- Adaptive Step Size Control ---
+    enable_adaptive_step_size: false
+    step_size_min: 0.2  # Corresponds to min uncertainty
+    step_size_max: 1.5  # Corresponds to max uncertainty
+
+    # --- Adaptive Max Iterations Control ---
+    enable_adaptive_max_iterations: true
+    max_iterations_min: 20 # Corresponds to min uncertainty
+    max_iterations_max: 50 # Corresponds to max uncertainty
+
+    # --- Adaptive Resolution Control ---
+    enable_adaptive_resolution: false
+    resolution_min: 1.0 # Corresponds to min uncertainty (finer)
+    resolution_max: 4.0 # Corresponds to max uncertainty (coarser)
+
+    # --- Adaptive Measurement Range Control ---
+    crop_box_node_name: "/localization/util/crop_box_filter_measurement_range"
+    enable_adaptive_range_control: true
+    range_pos_uncertainty_threshold: 2.0 # Expand range if uncertainty exceeds this value (meters)
+    base_max_x: 150.0
+    base_max_y: 60.0
+    expanded_max_x: 200.0
+    expanded_max_y: 100.0

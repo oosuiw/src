@@ -32,7 +32,8 @@
           <param from="$(var motion_velocity_smoother_param_path)"/>
           <param from="$(var velocity_smoother_type_param_path)"/>
 
-          <param name="publish_debug_trajs" value="false"/>
+          <param name="publish_debug_trajs" value="true"/> <!-- SWS_240410 -->
+          <param name="disable_smooth_vel" value="false"/> <!-- SWS_250202 --> <!-- If true, ego hardly stop in simulation --> <!-- For sim, false but for real, true in case of sweeper -->
           <remap from="~/input/trajectory" to="/planning/scenario_planning/scenario_selector/trajectory"/>
           <remap from="~/output/trajectory" to="/planning/scenario_planning/motion_velocity_smoother/trajectory"/>
 

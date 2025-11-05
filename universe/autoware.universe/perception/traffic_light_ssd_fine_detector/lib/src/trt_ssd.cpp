@@ -172,10 +172,13 @@ void Net::infer(std::vector<void *> & buffers, const int batch_size)
   if (!context_) {
     throw std::runtime_error("Fail to create context");
   }
-  auto input_dims = getTensorShape("input");
-  context_->setBindingDimensions(
-    0, nvinfer1::Dims4(batch_size, input_dims.d[1], input_dims.d[2], input_dims.d[3]));
-  context_->enqueueV2(buffers.data(), stream_, nullptr);
+  auto input_dims = engine_->getTensorShape("input");  // KMS_251105
+  context_->setInputShape(
+    "input", nvinfer1::Dims4(batch_size, input_dims.d[1], input_dims.d[2], input_dims.d[3]));  // KMS_251105
+  for (int i = 0; i < engine_->getNbIOTensors(); ++i) {  // KMS_251105
+    context_->setTensorAddress(engine_->getIOTensorName(i), buffers.data()[i]);  // KMS_251105
+  }
+  context_->enqueueV3(stream_);  // KMS_251105
   cudaStreamSynchronize(stream_);
 }
 

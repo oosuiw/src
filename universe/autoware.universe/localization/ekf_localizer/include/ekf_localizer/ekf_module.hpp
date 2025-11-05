@@ -77,6 +77,9 @@ public:
   std::array<double, 36> getCurrentPoseCovariance() const;
   std::array<double, 36> getCurrentTwistCovariance() const;
 
+  geometry_msgs::msg::PoseWithCovarianceStamped getAPrioriPoseWithCovariance(
+    const rclcpp::Time & current_time, const double z, const double roll, const double pitch) const;
+
   size_t find_closest_delay_time_index(double target_value) const;
   void accumulate_delay_time(const double dt);
 

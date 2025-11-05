@@ -1,0 +1,4 @@
+/pose_uncertainty_monitor:
+  ros__parameters:
+    input_pose_with_cov_topic: "/localization/pose_twist_fusion_filter/ekf_localizer/output/a_priori_pose_with_covariance"
+    output_score_topic: "/localization/pose_uncertainty"

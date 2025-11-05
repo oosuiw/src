@@ -360,3 +360,27 @@ bool EKFModule::measurementUpdateTwist(
 
   return true;
 }
+
+geometry_msgs::msg::PoseWithCovarianceStamped EKFModule::getAPrioriPoseWithCovariance(
+  const rclcpp::Time & current_time, const double z, const double roll, const double pitch) const
+{
+  // Get the predicted state and covariance from the Kalman Filter
+  const Eigen::MatrixXd X = kalman_filter_.getLatestX();
+  const Eigen::MatrixXd P = kalman_filter_.getLatestP();
+
+  // Create the pose part
+  geometry_msgs::msg::PoseStamped pose_stamped;
+  pose_stamped.header.frame_id = params_.pose_frame_id;
+  pose_stamped.header.stamp = current_time;
+  pose_stamped.pose.position = tier4_autoware_utils::createPoint(X(IDX::X), X(IDX::Y), z);
+  pose_stamped.pose.orientation =
+    tier4_autoware_utils::createQuaternionFromRPY(roll, pitch, X(IDX::YAW) + X(IDX::YAWB));
+
+  // Create the final message
+  geometry_msgs::msg::PoseWithCovarianceStamped pose_with_cov;
+  pose_with_cov.header = pose_stamped.header;
+  pose_with_cov.pose.pose = pose_stamped.pose;
+  pose_with_cov.pose.covariance = ekfCovarianceToPoseMessageCovariance(P);
+
+  return pose_with_cov;
+}

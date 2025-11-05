@@ -132,7 +132,7 @@ bool LidarApolloInstanceSegmentation::detectDynamicObjects(
 
   std::vector<void *> buffers = {input_d_.get(), output_d_.get()};
 
-  trt_common_->enqueueV2(buffers.data(), *stream_, nullptr);
+  trt_common_->enqueueV3(buffers.data(), *stream_);  // KMS_251105
 
   CHECK_CUDA_ERROR(cudaMemcpyAsync(
     output_h_.get(), output_d_.get(), sizeof(float) * output_size_, cudaMemcpyDeviceToHost,
