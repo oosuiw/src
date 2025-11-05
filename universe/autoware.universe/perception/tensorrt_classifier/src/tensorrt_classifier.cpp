@@ -138,7 +138,9 @@ TrtClassifier::TrtClassifier(
     ext = "histogram.table";
     histogram_table.replace_extension(ext);
 
-    std::unique_ptr<nvinfer1::IInt8Calibrator> calibrator;
+#pragma GCC diagnostic push  // KMS_251105
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"  // KMS_251105
+    std::unique_ptr<nvinfer1::IInt8Calibrator> calibrator;  // KMS_251105
     if (build_config.calib_type_str == "Entropy") {
       calibrator.reset(
         new tensorrt_classifier::Int8EntropyCalibrator(stream, calibration_table, mean_, std_));
@@ -154,6 +156,7 @@ TrtClassifier::TrtClassifier(
     }
     trt_common_ = std::make_unique<tensorrt_common::TrtCommon>(
       model_path, precision, std::move(calibrator), batch_config, max_workspace_size, build_config);
+#pragma GCC diagnostic pop  // KMS_251105
   } else {
     trt_common_ = std::make_unique<tensorrt_common::TrtCommon>(
       model_path, precision, nullptr, batch_config, max_workspace_size, build_config);

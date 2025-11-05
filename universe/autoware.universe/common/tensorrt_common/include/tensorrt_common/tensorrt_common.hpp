@@ -141,12 +141,15 @@ public:
    * fp16 for first layer,  remaining fp16 for last layer and profiler for builder
    * @param[in] plugin_paths path for custom plugin
    */
+#pragma GCC diagnostic push  // KMS_251105
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"  // KMS_251105
   TrtCommon(
     const std::string & model_path, const std::string & precision,
     std::unique_ptr<nvinfer1::IInt8Calibrator> calibrator = nullptr,
     const BatchConfig & batch_config = {1, 1, 1}, const size_t max_workspace_size = (16 << 20),
     const BuildConfig & buildConfig = BuildConfig(),
     const std::vector<std::string> & plugin_paths = {});
+#pragma GCC diagnostic pop  // KMS_251105
 
   /**
    * @brief Deconstruct TrtCommon
@@ -205,7 +208,10 @@ private:
   TrtUniquePtr<nvinfer1::IRuntime> runtime_;
   TrtUniquePtr<nvinfer1::ICudaEngine> engine_;
   TrtUniquePtr<nvinfer1::IExecutionContext> context_;
-  std::unique_ptr<nvinfer1::IInt8Calibrator> calibrator_;
+#pragma GCC diagnostic push  // KMS_251105
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"  // KMS_251105
+  std::unique_ptr<nvinfer1::IInt8Calibrator> calibrator_;  // KMS_251105
+#pragma GCC diagnostic pop  // KMS_251105
 
   nvinfer1::Dims input_dims_;
   nvinfer1::Dims output_dims_;

@@ -86,6 +86,8 @@ bool is_valid_precision_string(const std::string & precision)
   }
 }
 
+#pragma GCC diagnostic push  // KMS_251105
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"  // KMS_251105
 TrtCommon::TrtCommon(
   const std::string & model_path, const std::string & precision,
   std::unique_ptr<nvinfer1::IInt8Calibrator> calibrator, const BatchConfig & batch_config,
@@ -99,6 +101,7 @@ TrtCommon::TrtCommon(
   model_profiler_("Model"),
   host_profiler_("Host")
 {
+#pragma GCC diagnostic pop  // KMS_251105
   // Check given precision is valid one
   if (!is_valid_precision_string(precision)) {
     return;
@@ -476,7 +479,10 @@ bool TrtCommon::buildEngineFromOnnx(
 #endif
     // QAT requires no calibrator.
     //    assert((calibrator != nullptr) && "Invalid calibrator for INT8 precision");
-    config->setInt8Calibrator(calibrator_.get());
+#pragma GCC diagnostic push  // KMS_251105
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"  // KMS_251105
+    config->setInt8Calibrator(calibrator_.get());  // KMS_251105
+#pragma GCC diagnostic pop  // KMS_251105
   }
   if (build_config_->profile_per_layer) {
 #if (NV_TENSORRT_MAJOR * 1000) + (NV_TENSORRT_MINOR * 100) + NV_TENSOR_PATCH >= 8200
