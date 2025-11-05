@@ -541,7 +541,7 @@ int32_t TrtCommon::getNbBindings()
 
 bool TrtCommon::setBindingDimensions(const int32_t index, const nvinfer1::Dims & dimensions) const
 {
-  return context_->setInputShape(engine_->getIOTensorName(index), dimensions);
+  return context_->setInputShape(engine_->getIOTensorName(index), dimensions);  // KMS_251105
 }
 
 bool TrtCommon::enqueueV3(void ** bindings, cudaStream_t stream)
