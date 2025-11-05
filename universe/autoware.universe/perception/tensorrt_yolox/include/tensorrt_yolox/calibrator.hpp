@@ -163,6 +163,10 @@ private:
  * @brief Calibrator for Percentile
  * @warning We are confirming bug on Tegra like Xavier and Orin. We recommend use MinMax calibrator
  */
+#pragma GCC diagnostic push  // KMS_251105
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"  // KMS_251105
+#pragma GCC diagnostic push  // KMS_251105
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"  // KMS_251105
 class Int8LegacyCalibrator : public nvinfer1::IInt8LegacyCalibrator
 {
 public:
@@ -298,12 +302,18 @@ private:
   double quantile_;
   double cutoff_;
 };
+#pragma GCC diagnostic pop  // KMS_251105
+#pragma GCC diagnostic pop  // KMS_251105
 
 /**
  * @class Int8LegacyCalibrator
  * @brief Calibrator for Percentile
  * @warning This calibrator causes crucial accuracy drop for YOLOX.
  */
+#pragma GCC diagnostic push  // KMS_251105
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"  // KMS_251105
+#pragma GCC diagnostic push  // KMS_251105
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"  // KMS_251105
 class Int8EntropyCalibrator : public nvinfer1::IInt8EntropyCalibrator2
 {
 public:
@@ -393,12 +403,18 @@ private:
   std::vector<char> hist_cache_;
   double scale_;
 };
+#pragma GCC diagnostic pop  // KMS_251105
+#pragma GCC diagnostic pop  // KMS_251105
 
 /**
  * @class Int8MinMaxCalibrator
  * @brief Calibrator for MinMax
  * @warning We strongly recommend MinMax calibrator for YOLOX
  */
+#pragma GCC diagnostic push  // KMS_251105
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"  // KMS_251105
+#pragma GCC diagnostic push  // KMS_251105
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"  // KMS_251105
 class Int8MinMaxCalibrator : public nvinfer1::IInt8MinMaxCalibrator
 {
 public:
@@ -488,6 +504,7 @@ private:
   std::vector<char> hist_cache_;
   double scale_;
 };
+#pragma GCC diagnostic pop  // KMS_251105
 }  // namespace tensorrt_yolox
 
 #endif  // TENSORRT_YOLOX__CALIBRATOR_HPP_

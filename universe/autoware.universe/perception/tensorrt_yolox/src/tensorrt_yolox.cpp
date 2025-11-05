@@ -149,7 +149,9 @@ TrtYoloX::TrtYoloX(
     ext = "histogram.table";
     histogram_table.replace_extension(ext);
 
-    std::unique_ptr<nvinfer1::IInt8Calibrator> calibrator;
+#pragma GCC diagnostic push  // KMS_251105
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"  // KMS_251105
+    std::unique_ptr<nvinfer1::IInt8Calibrator> calibrator;  // KMS_251105
     if (build_config.calib_type_str == "Entropy") {
       calibrator.reset(
         new tensorrt_yolox::Int8EntropyCalibrator(stream, calibration_table, norm_factor_));
@@ -167,6 +169,7 @@ TrtYoloX::TrtYoloX(
 
     trt_common_ = std::make_unique<tensorrt_common::TrtCommon>(
       model_path, precision, std::move(calibrator), batch_config, max_workspace_size, build_config);
+#pragma GCC diagnostic pop  // KMS_251105
   } else {
     trt_common_ = std::make_unique<tensorrt_common::TrtCommon>(
       model_path, precision, nullptr, batch_config, max_workspace_size, build_config);
@@ -696,7 +699,13 @@ bool TrtYoloX::doMultiScaleInference(
 
 // This method is assumed to be called when specified YOLOX model contains
 // EfficientNMS_TRT module.
-trt_common_->enqueueV3(buffers.data(), *stream_);  // KMS_251105
+bool TrtYoloX::feedforward(const std::vector<cv::Mat> & images, ObjectArrays & objects)
+{
+  std::vector<void *> buffers = {
+    input_d_.get(), out_num_detections_d_.get(), out_boxes_d_.get(), out_scores_d_.get(),
+    out_classes_d_.get()};
+
+  trt_common_->enqueueV3(buffers.data(), *stream_);  // KMS_251105
   const auto batch_size = images.size();
   auto out_num_detections = std::make_unique<int32_t[]>(batch_size);
   auto out_boxes = std::make_unique<float[]>(4 * batch_size * max_detections_);
@@ -744,7 +753,7 @@ bool TrtYoloX::feedforwardAndDecode(const std::vector<cv::Mat> & images, ObjectA
 {
   std::vector<void *> buffers = {input_d_.get(), out_prob_d_.get()};
 
-  trt_common_->enqueueV2(buffers.data(), *stream_, nullptr);
+  trt_common_->enqueueV3(buffers.data(), *stream_);  // KMS_251105
 
   const auto batch_size = images.size();
 
@@ -768,11 +777,10 @@ bool TrtYoloX::feedforwardAndDecode(const std::vector<cv::Mat> & images, ObjectA
 // EfficientNMS_TRT module.
 bool TrtYoloX::multiScaleFeedforward(const cv::Mat & image, int batch_size, ObjectArrays & objects)
 {
-  std::vector<void *> buffers = {
+  std::vector<void *> buffers = { // KMS_251105
     input_d_.get(), out_num_detections_d_.get(), out_boxes_d_.get(), out_scores_d_.get(),
     out_classes_d_.get()};
-
-  trt_common_->enqueueV2(buffers.data(), *stream_, nullptr);
+  trt_common_->enqueueV3(buffers.data(), *stream_);  // KMS_251105
 
   auto out_num_detections = std::make_unique<int32_t[]>(batch_size);
   auto out_boxes = std::make_unique<float[]>(4 * batch_size * max_detections_);
@@ -820,7 +828,7 @@ bool TrtYoloX::multiScaleFeedforwardAndDecode(
   const cv::Mat & image, int batch_size, ObjectArrays & objects)
 {
   std::vector<void *> buffers = {input_d_.get(), out_prob_d_.get()};
-  trt_common_->enqueueV2(buffers.data(), *stream_, nullptr);
+  trt_common_->enqueueV3(buffers.data(), *stream_);  // KMS_251105
 
   CHECK_CUDA_ERROR(cudaMemcpyAsync(
     out_prob_h_.get(), out_prob_d_.get(), sizeof(float) * out_elem_num_, cudaMemcpyDeviceToHost,
