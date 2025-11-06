@@ -85,7 +85,7 @@ def launch_setup(context, *args, **kwargs):
     ), "Sensor calib file under calibration/ was not found: {}".format(sensor_calib_fp)
 
     nodes = []
-
+    
     nodes.append(
         ComposableNode(
             package="nebula_ros",
@@ -117,7 +117,7 @@ def launch_setup(context, *args, **kwargs):
             extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
         )
     )
-
+    
     cropbox_parameters = create_parameter_dict("input_frame", "output_frame")
     cropbox_parameters["negative"] = True
 
@@ -179,7 +179,7 @@ def launch_setup(context, *args, **kwargs):
             extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
         )
     )
-
+    
     nodes.append(
         ComposableNode(
             package="pointcloud_preprocessor",
@@ -192,7 +192,7 @@ def launch_setup(context, *args, **kwargs):
             extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
         )
     )
-
+    
     # set container to run all required components in the same process
     container = ComposableNodeContainer(
         name=LaunchConfiguration("container_name"),
@@ -266,7 +266,7 @@ def generate_launch_description():
     add_launch_arg("config_file", "", description="sensor configuration file")
     add_launch_arg("launch_driver", "True", "do launch driver")
     add_launch_arg("setup_sensor", "True", "configure sensor")
-    add_launch_arg("sensor_ip", "192.168.2.201", "device ip address")
+    add_launch_arg("sensor_ip", "192.168.1.201", "device ip address")
     add_launch_arg("host_ip", "255.255.255.255", "host ip address")
     add_launch_arg("scan_phase", "0.0")
     add_launch_arg("base_frame", "base_link", "base frame id")

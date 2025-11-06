@@ -14,7 +14,7 @@
   <!-- Optional parameters -->
   <!-- Modules to be launched -->
   <arg name="launch_vehicle" default="true" description="launch vehicle"/>
-  <arg name="launch_system" default="true" description="launch system"/> <!--HJK_241120 Commit[Cart v1.0, f4d8f9d]-->
+  <arg name="launch_system" default="false" description="launch system"/> <!--HJK_241120 Commit[Cart v1.0, f4d8f9d]-->
   <arg name="launch_map" default="true" description="launch map"/>
   <arg name="launch_sensing" default="true" description="launch sensing"/>
   <arg name="launch_sensing_driver" default="true" description="launch sensing driver"/>
@@ -31,12 +31,13 @@
   <arg name="check_external_emergency_heartbeat" default="false"/>
   
   <!-- Map -->
-  <!--GGM-->
+  <!-- GGM -->
   <!-- <arg name="lanelet2_map_file" default="ggm_mgrs_v12.osm" description="lanelet2 map file name"/> -->
   <!-- <arg name="pointcloud_map_file" default="ggm_modified_mgrs.pcd" description="pointcloud map file name"/>   -->
   
-  <arg name="lanelet2_map_file" default="lanelet2_map.osm" description="lanelet2 map file name"/>
-  <arg name="pointcloud_map_file" default="pointcloud_map.pcd" description="pointcloud map file name"/> 
+  <!-- CSU -->
+  <arg name="lanelet2_map_file" default="CSU_Roundabout.osm" description="lanelet2 map file name"/>
+  <arg name="pointcloud_map_file" default="cu_mgrs_v4.pcd" description="pointcloud map file name"/> 
 
   <!-- System -->
   <arg name="system_run_mode" default="online" description="run mode in system"/>
