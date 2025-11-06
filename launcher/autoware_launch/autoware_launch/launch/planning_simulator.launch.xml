@@ -14,8 +14,8 @@
   <!-- <arg name="lanelet2_map_file" default="lanelet2_map.osm" description="lanelet2 map file name"/> -->
   <!-- <arg name="pointcloud_map_file" default="pointcloud_map.pcd" description="pointcloud map file name"/> -->
 
-  <arg name="lanelet2_map_file" default="CSU_Roundabout_reverse.osm" description="lanelet2 map file name"/>
-  <arg name="pointcloud_map_file" default="CSU_divided" description="pointcloud map file name"/>
+  <arg name="lanelet2_map_file" default="CSU_Roundabout.osm" description="lanelet2 map file name"/>
+  <arg name="pointcloud_map_file" default="CSU_Roundabout.pcd" description="pointcloud map file name"/>
 
 
   <!-- System -->
