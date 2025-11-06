@@ -8,7 +8,7 @@
     <arg name="calibration_file" default="$(find-pkg-share nebula_decoders)/calibration/hesai/$(var sensor_model).csv"/>
     <arg name="correction_file" default="$(find-pkg-share nebula_decoders)/calibration/hesai/$(var sensor_model).dat"/>
 
-    <arg name="sensor_ip" default="192.168.1.201" description="Lidar Sensor IP"/>
+    <arg name="sensor_ip" default="192.168.2.201" description="Lidar Sensor IP"/> <!-- KMS_251106, 192.168.1.201-->
     <arg name="host_ip" default="255.255.255.255" description="Broadcast IP from Sensor"/>
     <arg name="data_port" default="2368" description="LiDAR Data Port"/>
     <arg name="gnss_port" default="2369" description="LiDAR GNSS Port"/>
@@ -56,7 +56,8 @@
         <param name="retry_hw" value="$(var retry_hw)"/>
     </node>
 
-    <node pkg="nebula_ros" exec="hesai_hw_monitor_ros_wrapper_node"
+    <!-- KMS_251106 -->
+    <!-- <node pkg="nebula_ros" exec="hesai_hw_monitor_ros_wrapper_node"
           name="hesai_hw_monitor_$(var frame_id)" output="screen">
         <param name="sensor_model" value="$(var sensor_model)"/>
         <param name="return_mode" value="$(var return_mode)"/>
@@ -74,6 +75,6 @@
         <param name="diag_span" value="$(var diag_span)"/>
         <param name="dual_return_distance_threshold" value="$(var dual_return_distance_threshold)"/>
         <param name="delay_monitor_ms" value="$(var delay_monitor_ms)"/>
-    </node>
+    </node> -->
 
 </launch>
