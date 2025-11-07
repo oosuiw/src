@@ -105,6 +105,11 @@ void HesaiDriverRosWrapper::PublishCloud(
   std::unique_ptr<sensor_msgs::msg::PointCloud2> pointcloud,
   const rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr & publisher)
 {
+  // KMS_251107: If use_sensor_time is false, use system time instead of sensor time
+  if (!sensor_cfg_ptr_->use_sensor_time) {
+    pointcloud->header.stamp = this->now();
+  }
+
   if (pointcloud->header.stamp.sec < 0) {
     RCLCPP_WARN_STREAM(this->get_logger(), "Timestamp error, verify clock source.");
   }
@@ -241,6 +246,16 @@ Status HesaiDriverRosWrapper::GetParameters(
     this->declare_parameter<double>("dual_return_distance_threshold", 0.1, descriptor);
     sensor_configuration.dual_return_distance_threshold =
       this->get_parameter("dual_return_distance_threshold").as_double();
+  }
+  // KMS_251107: Add use_sensor_time parameter
+  {
+    rcl_interfaces::msg::ParameterDescriptor descriptor;
+    descriptor.type = rcl_interfaces::msg::ParameterType::PARAMETER_BOOL;
+    descriptor.read_only = false;
+    descriptor.dynamic_typing = false;
+    descriptor.additional_constraints = "Use sensor timestamp (true) or system timestamp (false)";
+    this->declare_parameter<bool>("use_sensor_time", true, descriptor);
+    sensor_configuration.use_sensor_time = this->get_parameter("use_sensor_time").as_bool();
   }
   if (sensor_configuration.sensor_model == nebula::drivers::SensorModel::UNKNOWN) {
     return Status::INVALID_SENSOR_MODEL;

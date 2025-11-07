@@ -22,6 +22,7 @@ struct HesaiSensorConfiguration : SensorConfigurationBase
   uint16_t rotation_speed;
   uint16_t cloud_min_angle;
   uint16_t cloud_max_angle;
+  bool use_sensor_time{true};  // KMS_251107: true = sensor time, false = system time
 };
 /// @brief Convert HesaiSensorConfiguration to string (Overloading the << operator)
 /// @param os
@@ -32,7 +33,8 @@ inline std::ostream & operator<<(std::ostream & os, HesaiSensorConfiguration con
   os << (SensorConfigurationBase)(arg) << ", GnssPort: " << arg.gnss_port
      << ", ScanPhase:" << arg.scan_phase << ", RotationSpeed:" << arg.rotation_speed
      << ", FOV(Start):" << arg.cloud_min_angle << ", FOV(End):" << arg.cloud_max_angle
-     << ", DualReturnDistanceThreshold:" << arg.dual_return_distance_threshold;
+     << ", DualReturnDistanceThreshold:" << arg.dual_return_distance_threshold
+     << ", UseSensorTime:" << arg.use_sensor_time;  // KMS_251107
   return os;
 }
 

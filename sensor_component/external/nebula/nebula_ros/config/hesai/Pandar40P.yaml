@@ -15,5 +15,6 @@
     diag_span: 1000 # milliseconds
     calibration_file: "./install/nebula_decoders/share/nebula_decoders/calibration/hesai/Pandar40P.csv"
     setup_sensor: True
+    use_sensor_time: True # KMS_251107: True=sensor time, False=system time
 
     online: True

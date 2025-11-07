@@ -17,11 +17,11 @@
   <arg name="launch_system" default="false" description="launch system"/> <!--HJK_241120 Commit[Cart v1.0, f4d8f9d]-->
   <arg name="launch_map" default="true" description="launch map"/>
   <arg name="launch_sensing" default="true" description="launch sensing"/>
-  <arg name="launch_sensing_driver" default="false" description="launch sensing driver"/>
+  <arg name="launch_sensing_driver" default="false" description="launch sensing driver"/> <!-- KMS_251107 -->
   <arg name="launch_localization" default="true" description="launch localization"/>
   <arg name="launch_perception" default="true" description="launch perception"/>
-  <arg name="launch_planning" default="false" description="launch planning"/>
-  <arg name="launch_control" default="false" description="launch control"/>
+  <arg name="launch_planning" default="false" description="launch planning"/> <!-- KMS_251107 -->
+  <arg name="launch_control" default="false" description="launch control"/> <!-- KMS_251107 -->
   <!-- Global parameters -->
   <arg name="use_sim_time" default="false" description="use_sim_time"/>
   <!-- Vehicle -->
@@ -37,7 +37,7 @@
   
   <!-- CSU -->
   <arg name="lanelet2_map_file" default="CSU_Roundabout.osm" description="lanelet2 map file name"/>
-  <arg name="pointcloud_map_file" default="CSU_Roundabout.pcd" description="pointcloud map file name"/> 
+  <arg name="pointcloud_map_file" default="CSU_Roundabout_Divided" description="pointcloud map file name"/> 
 
   <!-- TF-->
   <node pkg="tf2_ros" exec="static_transform_publisher" name="base_link_to_hesai" 
