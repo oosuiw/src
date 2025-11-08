@@ -86,48 +86,49 @@ def launch_setup(context, *args, **kwargs):
 
     nodes = []
     
-    # nodes.append(
-    #     ComposableNode(
-    #         package="nebula_ros",
-    #         plugin=sensor_make + "DriverRosWrapper",
-    #         name=sensor_make.lower() + "_driver_ros_wrapper_node",
-    #         parameters=[
-    #             {
-    #                 "calibration_file": sensor_calib_fp,
-    #                 "sensor_model": sensor_model,
-    #                 **create_parameter_dict(
-    #                     "host_ip",
-    #                     "sensor_ip",
-    #                     "data_port",
-    #                     "return_mode",
-    #                     "min_range",
-    #                     "max_range",
-    #                     "frame_id",
-    #                     "scan_phase",
-    #                     "cloud_min_angle",
-    #                     "cloud_max_angle",
-    #                     "dual_return_distance_threshold",
-    #                 ),
-    #             },
-    #         ],
-    #         remappings=[
-    #             ("aw_points", "pointcloud_raw"),
-    #             ("aw_points_ex", "pointcloud_raw_ex"),
-    #         ],
-    #         extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
-    #     )
-    # )
+    # Driver ROS Wrapper Node # If you disable driver launch, this node won't be launched # KMS_251107
+    nodes.append(
+        ComposableNode(
+            package="nebula_ros",
+            plugin=sensor_make + "DriverRosWrapper",
+            name=sensor_make.lower() + "_driver_ros_wrapper_node",
+            parameters=[
+                {
+                    "calibration_file": sensor_calib_fp,
+                    "sensor_model": sensor_model,
+                    **create_parameter_dict(
+                        "host_ip",
+                        "sensor_ip",
+                        "data_port",
+                        "return_mode",
+                        "min_range",
+                        "max_range",
+                        "frame_id",
+                        "scan_phase",
+                        "cloud_min_angle",
+                        "cloud_max_angle",
+                        "dual_return_distance_threshold",
+                    ),
+                },
+            ],
+            remappings=[
+                ("aw_points", "pointcloud_raw"),
+                ("aw_points_ex", "pointcloud_raw_ex"),
+            ],
+            extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
+        )
+    )
     
     cropbox_parameters = create_parameter_dict("input_frame", "output_frame")
     cropbox_parameters["negative"] = True
 
     vehicle_info = get_vehicle_info(context)
-    cropbox_parameters["min_x"] = vehicle_info["min_longitudinal_offset"]
-    cropbox_parameters["max_x"] = vehicle_info["max_longitudinal_offset"]
-    cropbox_parameters["min_y"] = vehicle_info["min_lateral_offset"]
-    cropbox_parameters["max_y"] = vehicle_info["max_lateral_offset"]
-    cropbox_parameters["min_z"] = vehicle_info["min_height_offset"]
-    cropbox_parameters["max_z"] = vehicle_info["max_height_offset"]
+    cropbox_parameters["min_x"] = -0.2    #vehicle_info["min_longitudinal_offset"]
+    cropbox_parameters["max_x"] = 0.2     #vehicle_info["max_longitudinal_offset"]
+    cropbox_parameters["min_y"] = -0.3     #vehicle_info["min_lateral_offset"]
+    cropbox_parameters["max_y"] = 0.3      #vehicle_info["max_lateral_offset"]
+    cropbox_parameters["min_z"] = 0.0     #vehicle_info["min_height_offset"]
+    cropbox_parameters["max_z"] = 1.53     #vehicle_info["max_height_offset"]
 
     nodes.append(
         ComposableNode(
@@ -135,7 +136,7 @@ def launch_setup(context, *args, **kwargs):
             plugin="pointcloud_preprocessor::CropBoxFilterComponent",
             name="crop_box_filter_self",
             remappings=[
-                ("input", "/lidar_points"),
+                ("input", "/sensing/lidar/top/pointcloud_raw_ex"),
                 ("output", "/sensing/lidar/concatenated/pointcloud"),
             ],
             parameters=[cropbox_parameters],

@@ -17,7 +17,7 @@
   <arg name="launch_system" default="false" description="launch system"/> <!--HJK_241120 Commit[Cart v1.0, f4d8f9d]-->
   <arg name="launch_map" default="true" description="launch map"/>
   <arg name="launch_sensing" default="true" description="launch sensing"/>
-  <arg name="launch_sensing_driver" default="false" description="launch sensing driver"/> <!-- KMS_251107 -->
+  <arg name="launch_sensing_driver" default="true" description="launch sensing driver"/> <!-- KMS_251107 -->
   <arg name="launch_localization" default="true" description="launch localization"/>
   <arg name="launch_perception" default="true" description="launch perception"/>
   <arg name="launch_planning" default="false" description="launch planning"/> <!-- KMS_251107 -->
@@ -36,12 +36,12 @@
   <!-- <arg name="pointcloud_map_file" default="ggm_modified_mgrs.pcd" description="pointcloud map file name"/>   -->
   
   <!-- CSU -->
-  <arg name="lanelet2_map_file" default="CSU_Roundabout.osm" description="lanelet2 map file name"/>
+  <arg name="lanelet2_map_file" default="CSU_Roundabout_reverse.osm" description="lanelet2 map file name"/>
   <arg name="pointcloud_map_file" default="CSU_Roundabout_Divided" description="pointcloud map file name"/> 
 
   <!-- TF-->
   <node pkg="tf2_ros" exec="static_transform_publisher" name="base_link_to_hesai" 
-   args="1.53 0.0 0.0 0.0 0.0 0.0 base_link hesai"/>
+   args="0.0 0.0 1.53 0.0 0.0 0.0 base_link hesai"/>
 
   <!-- System -->
   <arg name="system_run_mode" default="online" description="run mode in system"/>
