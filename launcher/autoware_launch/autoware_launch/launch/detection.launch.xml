@@ -43,9 +43,6 @@
   <node pkg="tf2_ros" exec="static_transform_publisher" name="base_link_to_hesai" 
    args="0.0 0.0 1.53 0.0 0.0 0.0 base_link hesai"/>
 
-  <node pkg="tf2_ros" exec="static_transform_publisher" name="map_to_base_link" 
-   args="11876.106546239118 90807.21249704021 80.78607091720434 -3.224555057196278e-05 -0.01789413285793077 -0.998031888653543 0.06010114974049245 map base_link"/>
-
   <!-- System -->
   <arg name="system_run_mode" default="online" description="run mode in system"/>
   <arg name="launch_system_monitor" default="true" description="launch system monitor"/>
@@ -53,7 +50,7 @@
   <arg name="system_error_monitor_param_path" default="$(find-pkg-share autoware_launch)/config/system/system_error_monitor/system_error_monitor.param.yaml"/>
   <!-- Tools -->
   <arg name="rviz" default="true" description="launch rviz"/>
-  <arg name="rviz_config" default="$(find-pkg-share autoware_launch)/rviz/autoware.rviz" description="rviz config"/>
+  <arg name="rviz_config" default="$(find-pkg-share autoware_launch)/rviz/detection.rviz" description="rviz config"/>
   <arg name="rviz_respawn" default="true"/>
   <!-- Perception -->
   <arg name="perception_mode" default="lidar" description="select perception mode. camera_lidar_radar_fusion, camera_lidar_fusion, lidar_radar_fusion, lidar, radar"/>
