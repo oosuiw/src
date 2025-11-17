@@ -19,7 +19,7 @@
   <arg name="launch_sensing" default="true" description="launch sensing"/>
   <arg name="launch_sensing_driver" default="true" description="launch sensing driver"/> <!-- KMS_251107 -->
   <arg name="launch_localization" default="true" description="launch localization"/>
-  <arg name="launch_perception" default="true" description="launch perception"/>
+  <arg name="launch_perception" default="false" description="launch perception"/>
   <arg name="launch_planning" default="false" description="launch planning"/> <!-- KMS_251107 -->
   <arg name="launch_control" default="false" description="launch control"/> <!-- KMS_251107 -->
   <!-- Global parameters -->
