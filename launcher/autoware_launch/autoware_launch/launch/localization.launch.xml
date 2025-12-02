@@ -37,7 +37,7 @@
   
   <!-- CSU -->
   <arg name="lanelet2_map_file" default="CSU_Roundabout_reverse.osm" description="lanelet2 map file name"/>
-  <arg name="pointcloud_map_file" default="CSU_Roundabout_Divided" description="pointcloud map file name"/> 
+  <arg name="pointcloud_map_file" default="CSU_Roundabout.pcd" description="pointcloud map file name"/> 
 
   <!-- TF-->
   <node pkg="tf2_ros" exec="static_transform_publisher" name="base_link_to_hesai" 
