@@ -59,7 +59,7 @@ visualization_msgs::msg::Marker::SharedPtr get_path_confidence_marker_ptr(
   marker_ptr->lifetime = rclcpp::Duration::from_seconds(0.2);
   marker_ptr->scale.x = 0.5;
   marker_ptr->scale.y = 0.5;
-  marker_ptr->scale.z = 0.5;
+  marker_ptr->scale.z = 2.0; //KMS_251218, change font size //0.5;
   marker_ptr->pose = initPose();
   marker_ptr->color = path_confidence_color;
   marker_ptr->pose.position = predicted_path.path.back().position;

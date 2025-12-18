@@ -163,8 +163,17 @@ std::vector<visualization_msgs::msg::Marker::SharedPtr> PredictedObjectsDisplay:
     }
 
     // Add marker for each candidate path
+    // KMS_251218: Skip predicted path visualization for UNKNOWN objects
+    const auto best_label = detail::get_best_label(object.classification, "PredictedObjectsDisplay");
+    const bool is_unknown = (best_label == autoware_auto_perception_msgs::msg::ObjectClassification::UNKNOWN);
+
     int32_t path_count = 0;
     for (const auto & predicted_path : object.kinematics.predicted_paths) {
+      // KMS_251218: Do not display predicted paths for UNKNOWN objects
+      if (is_unknown) {
+        continue;
+      }
+
       // Get marker for predicted path
       auto predicted_path_marker =
         get_predicted_path_marker_ptr(object.object_id, object.shape, predicted_path);
@@ -184,6 +193,11 @@ std::vector<visualization_msgs::msg::Marker::SharedPtr> PredictedObjectsDisplay:
       if (predicted_path.path.empty()) {
         continue;
       }
+      // KMS_251218: Do not display path confidence for UNKNOWN objects
+      if (is_unknown) {
+        continue;
+      }
+
       auto path_confidence_marker =
         get_path_confidence_marker_ptr(object.object_id, predicted_path);
       if (path_confidence_marker) {
